@@ -1,30 +1,46 @@
 /* ******************************************
- * This server.js file is the primary file of the 
+ * This server.js file is the primary file of the
  * application. It is used to control the project.
  *******************************************/
 /* ***********************
  * Require Statements
  *************************/
-const express = require("express")
-const env = require("dotenv").config()
-const app = express()
-const static = require("./routes/static")
+const express = require("express");
+const expressLayouts = require("express-ejs-layouts");
+const env = require("dotenv").config();
+const app = express();
+const static = require("./routes/static");
+
+/* ***********************
+ * View Engine and Templates
+ *************************/
+// Tell Express to use EJS as the template engine
+app.set("view engine", "ejs");
+// Enable express-ejs-layouts middleware
+app.use(expressLayouts);
+// The ./layouts/layout path is relative to the views folder
+app.set("layout", "./layouts/layout");
 
 /* ***********************
  * Routes
  *************************/
-app.use(static)
+app.use(static);
+
+// Index Route: Serve up the index.ejs template from Views and pass in the data object title as "Home"
+app.get("/", (req, res) => {
+  res.render("index", { title: "Home" });
+});
 
 /* ***********************
  * Local Server Information
  * Values from .env (environment) file
  *************************/
-const port = process.env.PORT
-const host = process.env.HOST
+const port = process.env.PORT;
+const host = process.env.HOST;
 
 /* ***********************
  * Log statement to confirm server operation
  *************************/
 app.listen(port, () => {
-  console.log(`app listening on ${host}:${port}`)
-})
+  console.log(`app listening on ${host}:${port}`);
+});

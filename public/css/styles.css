@@ -4,3 +4,23 @@
 *:after {
   box-sizing: border-box;
 }
+
+html, body {
+  background-color: #bed;
+  font-family: Roboto, Arial, Serif;
+}
+
+
+li {
+  list-style-type: none;
+}
+
+a {
+  color: #000;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: none;
+  color: firebrick;
+}
