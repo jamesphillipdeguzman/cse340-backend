@@ -5,14 +5,86 @@
   box-sizing: border-box;
 }
 
-html, body {
-  background-color: #bed;
+
+body {
+  display: flex;
+  background-image:url("../images/site/small_check.jpg");
+
+  justify-content: center;
   font-family: Roboto, Arial, Serif;
 }
 
+#wrapper {
+  background-color: #fff;
+  border-radius: 10px;
+  max-width: 85vw;
+  width: 100%;
+  margin: 1rem;
+  outline: 10px solid coral;
+}
+
+/*********************
+ * HEADER STYLES
+ *********************/
+
+#top-header{
+  display: flex;
+  justify-content: space-between;
+  margin: 2rem;
+  
+} 
+
+#top-header a:hover {
+  text-decoration: none;
+  color: #333;
+}
+
+
+.siteName {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+#my-account {
+  font-size: 0.8rem;
+}
+
+
+
+/*********************
+ * NAVIGATION STYLES
+ *********************/
+nav {
+  display: flex;
+  background-color: #333;
+  align-items: center;
+  height: 40px;
+  margin: 5px;
+}
+.navLinks a {
+  color: #fff;
+}
+
+
+ul {
+  display: flex;
+  gap: 3rem;
+  margin: 0 auto;
+  
+  
+}
+
+ul li a {
+  display: flex;
+  /* align-items: center; */
+  
+  /* padding: 10px; */
+  margin: 0 auto;
+}
 
 li {
   list-style-type: none;
+  /* justify-content: center; */
+  
 }
 
 a {
@@ -20,7 +92,44 @@ a {
   text-decoration: none;
 }
 
-a:hover {
+.navLinks a:hover {
   text-decoration: none;
-  color: firebrick;
+  color: yellow;
 }
+
+
+/*********************
+ * MAIN STYLES
+ *********************/
+
+
+main {
+  display: flex;
+  flex-direction: column; 
+  background-color: white;
+}
+
+
+ figure {
+  margin: 0 auto;
+ 
+ }
+ 
+ figure img {
+   object-fit: cover;
+ }
+
+ figcaption {
+  text-align: center;
+ }
+
+  h1 {
+  font-family: Georgia, Helvetica, sans-serif;
+  margin: 1rem;
+  padding: 0.5rem;
+ }
+
+ footer {
+  margin: 1rem;
+  padding: 0.5rem;
+ }
