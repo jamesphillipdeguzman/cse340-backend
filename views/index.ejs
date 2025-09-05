@@ -1,8 +1,64 @@
 <hr>
-<!-- <div id="landing-page"> -->
-<h1>Welcome to CSE Motors</h1>
-<figure>
-    <img src="../images/vehicles/delorean.jpg" alt="hero image: delorean" height="350" width="600">
-    <figcaption>The Delorean</figcaption>
-</figure>
-<!-- </div> -->
+<%- contentFor('hero-section') %>
+    <div class="welcome">
+        <h1>Welcome to CSE Motors</h1>
+        <figure>
+            <img id="hero" src="../images/vehicles/delorean.jpg" alt="hero image: delorean" height="350" width="600">
+            <figcaption>The Delorean</figcaption>
+        </figure>
+    </div>
+
+    <%- contentFor('feature-article1') %>
+        <article class="featured-card">
+            <h2>DMC Delorean</h2>
+            <ul class="delorean-features">
+                <li>3 Cup Holders</li>
+                <li>Superman Doors</li>
+                <li>Fuzzy dice!</li>
+            </ul>
+        </article>
+
+        <div class="section-wrapper">
+            <%- contentFor('feature-article2') %>
+
+                <div class="upgrade-list-wrapper">
+                    <section class="upgrades-list1">
+                        <h2>Delorean Upgrades</h2>
+                        <ul class="delorean-upgrades1">
+                            <li class="card-upgrades">
+                                <img class="img-upgrade" src="../images/upgrades/flux-cap.png" alt="flux capacitor">
+                                <a href="#">Flux Capacitor</a>
+                            </li>
+                            <li class="card-upgrades">
+                                <img class="img-upgrade" src="../images/upgrades/flame.jpg" alt="flame">
+                                <a href="#">Flame Decals</a>
+                            </li>
+                        </ul>
+                    </section>
+                    <section class="upgrades-list2">
+                        <ul class="delorean-upgrades2">
+                            <li class="card-upgrades">
+                                <img class="img-upgrade" src="../images/upgrades/bumper_sticker.jpg"
+                                    alt="bumper sticker">
+                                <a href="#">Bumper Stickers</a>
+                            </li>
+                            <li class="card-upgrades">
+                                <img class="img-upgrade" src="../images/upgrades/hub-cap.jpg" alt="hub cap">
+                                <a href="#">Hub Caps</a>
+                            </li>
+                        </ul>
+                    </section>
+                </div>
+
+                <%- contentFor('feature-article3') %>
+                    <section class="reviews-list">
+                        <h2>DMC Delorean Reviews</h2>
+                        <ul class="delorean-reviews">
+                            <li>"So fast it's almost like traveling in time" (4/5)</li>
+                            <li>"Coolest ride on the road." (4/5)</li>
+                            <li>"I'm feeling McFly!" (5/5)</li>
+                            <li>"The most futuristic ride of our day."(4.5/5)</li>
+                            <li>"80's livin and I love it! (5/5)</li>
+                        </ul>
+                    </section>
+        </div>

@@ -9,7 +9,14 @@
 
                     <main>
                         <%# The index view is the "body" that will be supplied to the layout. %>
-                            <%- body %>
+                            <%- defineContent('hero-section') %>
+                                <!-- <%- body %> -->
+
+                                <%- defineContent('feature-article1') %>
+
+                                    <%- defineContent('feature-article2') %>
+
+                                        <%- defineContent('feature-article3') %>
                     </main>
                     <%- include('../partials/footer') %>
         </div>
