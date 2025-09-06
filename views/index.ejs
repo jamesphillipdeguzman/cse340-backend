@@ -10,21 +10,28 @@
 
     <%- contentFor('feature-article1') %>
         <article class="featured-card">
+
             <h2>DMC Delorean</h2>
+
+
             <ul class="delorean-features">
+                <span class="title">DMC Delorean</span>
                 <li>3 Cup Holders</li>
                 <li>Superman Doors</li>
                 <li>Fuzzy dice!</li>
+                <li><img id="owntoday" src="../images/site/own_today.png" alt="Own today" height="50" width="120">
+                </li>
             </ul>
+
         </article>
 
         <div class="section-wrapper">
             <%- contentFor('feature-article2') %>
 
                 <div class="upgrade-list-wrapper">
-                    <section class="upgrades-list1">
+                    <section class="upgrades-list">
                         <h2>Delorean Upgrades</h2>
-                        <ul class="delorean-upgrades1">
+                        <ul class="delorean-upgrades">
                             <li class="card-upgrades">
                                 <img class="img-upgrade" src="../images/upgrades/flux-cap.png" alt="flux capacitor">
                                 <a href="#">Flux Capacitor</a>
@@ -33,10 +40,6 @@
                                 <img class="img-upgrade" src="../images/upgrades/flame.jpg" alt="flame">
                                 <a href="#">Flame Decals</a>
                             </li>
-                        </ul>
-                    </section>
-                    <section class="upgrades-list2">
-                        <ul class="delorean-upgrades2">
                             <li class="card-upgrades">
                                 <img class="img-upgrade" src="../images/upgrades/bumper_sticker.jpg"
                                     alt="bumper sticker">
@@ -48,6 +51,11 @@
                             </li>
                         </ul>
                     </section>
+                    <!-- <section class="upgrades-list2">
+                        <ul class="delorean-upgrades2">
+
+                        </ul>
+                    </section> -->
                 </div>
 
                 <%- contentFor('feature-article3') %>
