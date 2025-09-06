@@ -1,4 +1,6 @@
-/******* Change Box Model ***************/
+/*********************
+ * CSS UNIVERSAL PRESETS
+ *********************/
 *,
 *:before,
 *:after {
@@ -14,19 +16,12 @@ body {
   font-family: Roboto, Arial, Serif;
 }
 
-#wrapper {
-  background-color: #fff;
-  border-radius: 10px;
-  max-width: 85vw;
-  width: 100%;
-  margin: 1rem;
-  /* height: auto; */
-  outline: 10px solid coral;
-}
 
 /*********************
  * HEADER STYLES
  *********************/
+
+ 
 
 #top-header{
   display: flex;
@@ -54,12 +49,15 @@ body {
 /*********************
  * NAVIGATION STYLES
  *********************/
+
 nav {
   display: flex;
   background-color: #333;
+  border-radius: 5px;  
   height: auto;
   margin: 5px;
   margin-bottom: 4rem;
+  
 
 }
 .navLinks a {
@@ -70,7 +68,7 @@ nav {
 .navLinks ul {
   display: flex;
   justify-content: space-between;
-    
+  
   
 } 
 
@@ -95,11 +93,10 @@ a {
   color: gray;
 }
 
+
 /*********************
  * HERO IMAGE SECTION
  *********************/
-
-
 
 .welcome {
  display: flex;
@@ -118,7 +115,22 @@ a {
 }
 
 /*********************
- * MAIN STYLES
+ * WRAPPER
+ *********************/
+
+#wrapper {
+  background-color: #fff;
+  border-radius: 10px;
+  max-width: 85vw;
+  width: 100%;
+  margin: 1rem;
+  /* height: auto; */
+  outline: 10px solid coral;
+}
+
+
+/*********************
+ * MAIN STYLES 
  *********************/
 
 
@@ -134,7 +146,9 @@ main {
 }
 
 
-
+/*********************
+ * DELOREAN FEATURES
+ *********************/
 
 .delorean-features {
   display: grid;
@@ -150,8 +164,8 @@ main {
   
   font-family: Verdana, Arial, sans-serif;
   color: rebeccapurple;
-  background-color: #eee;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+  background-color: #ccc;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.9);
   border: 1px solid #ccc;
   border-radius: 5px;
   padding: 16px;
@@ -165,13 +179,6 @@ main {
    
 }
 
-/* 
-.featured-card h2 {
-  grid-area: title;
-  margin-top: 1rem;
-  font-size: 1.1rem;
-  text-align: left;    
-} */
 
 .delorean-features .title {
   grid-area: title;
@@ -210,9 +217,9 @@ main {
 
 
 
-
-
-/* Upgrades */
+/*********************
+ * DELOREAN UPGRADES
+ *********************/
 
 
 .upgrades-list h2 {
@@ -290,8 +297,9 @@ main {
 }
 
 
-/* Reviews */
-
+/*********************
+ * REVIEWS
+ *********************/
 
 
 .reviews-list h2 {
@@ -332,10 +340,16 @@ main {
  }
 
  footer {
+  
   margin: 1rem;
   padding: 0.5rem;
+  
  }
 
+
+ /*********************
+ * MEDIA QUERIES
+ *********************/
 
  @media (max-width: 1000px) {
 
@@ -374,14 +388,12 @@ main {
     display: flex;
     flex-direction: column;
     margin-right: 2rem;
-    /* margin: 0 auto; */
+    
   }
 
 
   .upgrades-list h2 {
     text-align: left;
-    /* margin-left: 2.6rem; */
-    /* background-color: white; */
     font-size: 1.2rem;
   }
 
@@ -392,11 +404,11 @@ main {
   }
 
   .reviews-list {
-  display: flex;
-  flex-direction: column;
-  background-color: white;
-  align-items: left;
-}
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    align-items: left;
+  }
 
 
   .reviews-list  {
@@ -405,7 +417,6 @@ main {
   
   .reviews-list h2 {
     text-align: left;
-    /* margin-left: 2.5rem; */
     font-size: 1.2rem;
   }
   .featured-card {
@@ -413,10 +424,7 @@ main {
     width: 180px;
     height: 180px;
     font-size: 0.9rem;
-    /* top: 28rem;
-    left: 8rem;
-    transform: translateX(-50%);
-    transform: translateY(-50%); */
+    
   }
  }
 
