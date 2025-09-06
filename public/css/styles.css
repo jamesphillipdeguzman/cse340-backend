@@ -212,14 +212,16 @@ main {
   font-weight: bold;
   margin-left: 1.1rem;
   width: 120px;
-  background-color: rgb(255, 159, 0);
+  background-color: #0000FF;
+  color: #fff;
   border-radius: 5px;
   height: 40px;
   flex: 1 1 1rem;
 }
 
 #owntoday:hover {
-  background-color: rgba(255, 195, 0, 0.9);
+  background-color: rgba(0, 0, 255, 0.9)
+;
 }
   
 
