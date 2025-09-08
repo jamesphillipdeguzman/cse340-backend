@@ -212,15 +212,15 @@ main {
   font-weight: bold;
   margin-left: 1.1rem;
   width: 120px;
-  background-color: #003366;
-  color: #fff;
+  background-color: #ffcc00;
+  color: #000;
   border-radius: 5px;
   height: 40px;
   flex: 1 1 1rem;
 }
 
 #owntoday:hover {
-  background-color: rgba(0, 0, 153, 0.9);
+  transform: scale(1.01);
 } 
   
 
@@ -445,6 +445,12 @@ main {
     width: 100%;
     height: auto;
   }  
+
+  body {
+    background-image: none;
+  }
+
+
 
   #hero {
     height: auto;
