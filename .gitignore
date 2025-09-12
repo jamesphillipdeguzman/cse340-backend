@@ -20,3 +20,6 @@ README.md
 
 # Ignore lock yaml file
 pnpm-lock.yaml
+
+# Ignore vscode file
+.vscode
