@@ -10,6 +10,8 @@ const expressLayouts = require("express-ejs-layouts");
 const env = require("dotenv").config();
 const app = express();
 const static = require("./routes/static");
+const baseController = require("./controllers/baseController.js");
+
 
 /* ***********************
  * View Engine and Templates
@@ -27,9 +29,10 @@ app.set("layout", "./layouts/layout");
 app.use(static);
 
 // Index Route: Serve up the index.ejs template from Views and pass in the data object title as "Home"
-app.get("/", (req, res) => {
-  res.render("index", { title: "Home" });
-});
+// app.get("/", (req, res) => {
+//   res.render("index", { title: "Home" });
+// });
+app.get("/", baseController.buildHome);
 
 /* ***********************
  * Local Server Information
