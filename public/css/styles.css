@@ -357,6 +357,73 @@ main {
 
 
  /*********************
+ * INVENTORY CARDS (VEHICLES)
+ *********************/
+
+ #inv-display {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  /* background-color: #ccc; */
+  gap: 1rem;
+  padding: 1rem;
+  margin: 1rem;
+  border-radius: 3px;
+  border: 1px solid #ccc;
+  box-shadow: 0 5px 10px rgb(0, 0, 0, 0.5);
+  height: auto;
+  width: 100%;
+  max-width: 80vw;
+ }
+ #inv-display li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  box-shadow: 0 5px 10px rgb(0, 0, 0, 0.2);
+  width: 200px;
+  
+ }
+
+ #inv-display h2 {
+   margin: 0;
+   padding: 0;
+   font-size: 1rem;
+ }
+ #inv-display img {
+  width: 150px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 5px;
+  margin-top: 0.5rem;
+ }
+
+ .namePrice {
+   display: flex;
+   flex-direction: column;
+   justify-content: center; 
+   align-items: center;
+   width: 90%;
+   font-weight: bold;
+   color: firebrick;
+    margin: 0.5rem;
+  }
+
+  .namePrice a {
+    margin-bottom: 1.5rem;
+    padding: 0;
+    font-size: 0.8rem;
+    
+  }
+
+  .namePrice a:hover {
+    text-decoration: underline;
+    color: gray;
+  }
+
+ /*********************
  * MEDIA QUERIES
  *********************/
 
