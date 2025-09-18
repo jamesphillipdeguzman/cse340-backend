@@ -141,6 +141,13 @@ main {
   align-items: flex-start;
 }
 
+.errormsg {
+  color: firebrick;
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin: 2rem;
+}
+
 .featured-card h2 {
   color: white;
 }
