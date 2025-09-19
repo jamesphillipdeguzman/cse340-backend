@@ -170,7 +170,7 @@ main {
   gap: 1rem;
   
   font-family: Verdana, Arial, sans-serif;
-  color: rebeccapurple;
+  color: #000;
   background-color: #ccc;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.9);
   border: 1px solid #ccc;
@@ -217,8 +217,9 @@ main {
   height: auto;
   font-family: Georgia, Helvetica, sans-serif;
   font-weight: bold;
+  font-size: 0.9rem;
   margin-left: 1.1rem;
-  width: 120px;
+  width: 130px;
   background-color: #ffcc00;
   color: #000;
   border-radius: 5px;
@@ -362,6 +363,18 @@ main {
   
  }
 
+ #server-error {
+  color: navy;
+  font-weight: bold;
+  text-decoration: underline;
+  font-size: 0.9rem;
+  margin: 1rem;
+ }
+
+ #server-error:hover {
+  color: gray;
+  cursor: pointer;
+ }
 
  /*********************
  * INVENTORY CARDS (VEHICLES)
@@ -380,7 +393,7 @@ main {
   box-shadow: 0 5px 10px rgb(0, 0, 0, 0.5);
   height: auto;
   width: 100%;
-  max-width: 80vw;
+  max-width: 90vw;
  }
  #inv-display li {
   display: flex;
@@ -437,6 +450,32 @@ main {
     text-decoration: underline;
     color: gray;
   }
+
+ /***********************
+ * VEHICLE DETAIL PAGE
+ ***********************/
+#inv-detail {
+  display: flex;
+  background-color: #ccc;
+  margin: 1rem;
+  padding: 1rem;
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.5);
+}
+
+#inv-detail img {
+  width: 300px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 5px;
+  margin: 1rem;
+}
+
+.vehicle-details h3 {
+  color: firebrick;
+  margin: 0.8rem 0;
+  padding: 0;
+}
+
 
  /*********************
  * MEDIA QUERIES
@@ -554,9 +593,6 @@ main {
     
   }
 
-
-
-
   figcaption {
     font-size: 0.8rem;
   }
@@ -603,17 +639,53 @@ main {
     width: 90%;
     max-width: 80vw;
     height: auto; 
- }
+  }
 
- #inv-display img {
-  width: 120px;
-  height: 80px;
- }
+  #inv-display img {
+    width: 120px;
+    height: 80px;
+  }
 
- main h1 {
-  font-size: 1.2rem;
- }
-  
+  main h1 {
+    font-size: 1.2rem;
+  }
+
+  #inv-detail {
+    flex-direction: column;
+    align-items: center;
+    max-width: 80vw;
+    width: 80vw;
+    margin: 0 auto;
+    padding: 1rem;
+    
+  }
+
+  main h1 {
+    display: none;
+  }
+
+  #inv-detail h2 {
+    font-size: 1rem;
+  }
+
+  .vehicle-details h3 {
+    font-size: 0.9rem;
+    color: firebrick;
+  }
+
+  .vehicle-details p {
+    font-size: 0.8rem;
+  }
+
+  footer p {
+    font-size: 0.8rem;
+    
+  }
+
+  #server-error {
+    font-size: 0.8rem;
+    margin: 0.5rem;
+  }
 }
 
   

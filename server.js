@@ -36,6 +36,18 @@ app.use(static);
 app.get("/", utilities.handleErrors(baseController.buildHome));
 app.use("/inv", inventoryRoute);
 
+/**
+ * Deliberately cause a server error for testing purposes.
+ *
+ */
+app.get("/error-link", async (req, res, next) => {
+  next(new Error("Intentional server error."));
+});
+
+/**
+ * 404 Error handler
+ */
+
 // File not found route
 app.use(async (req, res, next) => {
   next({
@@ -51,13 +63,16 @@ app.use(async (req, res, next) => {
 app.use(async (err, req, res, next) => {
   let nav = await utilities.getNav();
   console.error(`Error at: "${req.originalUrl}": ${err.message}`);
-  if (err.status == 404) {
-    message = err.message;
-  } else {
-    message = `<span class="errormsg">Oh no! There was a crash. Maybe try a different route?</span>`;
-  }
-  res.render("errors/error", {
-    title: err.status || "Server Error",
+  let status = err.status || 500;
+  let title = status === 404 ? "404 Page Not Found" : "500 Server Error";
+  let message =
+    status === 404
+      ? `<span class="errormsg">Sorry, we couldn't find that page!</span>`
+      : `<span class="errormsg">Oh no! There was a crash. Maybe try a different route?</span>`;
+
+  // Set the response status code
+  res.status(err.status || 500).render("errors/error", {
+    title,
     message,
     nav,
   });

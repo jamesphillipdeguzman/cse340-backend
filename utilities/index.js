@@ -78,6 +78,54 @@ Util.buildClassificationGrid = async function (data) {
   return grid;
 };
 
+/**
+ * ****************************************
+ * Builds the Vehicle Detail View
+ * ****************************************
+ */
+
+Util.buildVehicleDetail = async function (data) {
+  let detail;
+  if (data.length > 0) {
+    detail = '<div id="inv-detail">';
+    data.forEach((vehicle) => {
+      detail += '<div class="vehicle-image">';
+      detail +=
+        '<img src="' +
+        vehicle.inv_image +
+        '" alt="Image of ' +
+        vehicle.inv_make +
+        " " +
+        vehicle.inv_model +
+        ' on CSE Motors" />';
+      detail += "</div>";
+      detail += '<div class="vehicle-details">';
+      detail += "<h2>";
+      detail +=
+        vehicle.inv_year + " " + vehicle.inv_make + " " + vehicle.inv_model;
+      detail += "</h2>";
+      detail +=
+        "<p>" +
+        "Price: " +
+        "</p>" +
+        "<h3>$" +
+        new Intl.NumberFormat("en-US").format(vehicle.inv_price) +
+        "</h3>";
+      detail += "<p>" + "Description: " + vehicle.inv_description + "</p>";
+      detail += "<p>" + "Color: " + vehicle.inv_color + "</p>";
+      detail +=
+        "<p>" +
+        "Miles: " +
+        new Intl.NumberFormat("en-US").format(vehicle.inv_miles) +
+        "</p>";
+      detail += "</div>";
+    });
+  } else {
+    detail += '<p class="notice"> Sorry, no matchin vehicle was found.</p>';
+  }
+  return detail;
+};
+
 /* ****************************************
  * Middleware For Handling Errors
  * Wrap other function in this for
