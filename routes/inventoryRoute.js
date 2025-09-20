@@ -16,4 +16,12 @@ router.get(
   utilities.handleErrors(invController.buildByInvID)
 );
 
+/**
+ * Deliberately cause a server error for testing purposes.
+ *
+ */
+
+router.get("/error-link", utilities.handleErrors(invController.throw500));
+
+
 module.exports = router;

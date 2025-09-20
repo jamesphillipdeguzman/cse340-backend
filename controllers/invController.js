@@ -54,4 +54,14 @@ invCont.buildByInvID = async function (req, res, next) {
   });
 };
 
+/**
+ * Deliberately cause a 500 server error for testing purposes.
+ */
+invCont.throw500 = async (req, res, next) => {
+  res.status(500);
+  next(new Error("Intentional server error."));   
+};
+
+
+
 module.exports = invCont;

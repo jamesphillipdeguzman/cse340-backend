@@ -37,13 +37,7 @@ app.get("/", utilities.handleErrors(baseController.buildHome));
 
 app.use("/inv", inventoryRoute);
 
-/**
- * Deliberately cause a server error for testing purposes.
- *
- */
-app.get("/error-link", async (req, res, next) => {
-  next(new Error("Intentional server error."));
-});
+
 
 /**
  * 404 Error handler
