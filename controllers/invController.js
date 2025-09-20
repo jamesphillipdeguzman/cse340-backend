@@ -10,6 +10,13 @@ invCont.buildByClassification = async function (req, res, next) {
   const classification_id = req.params.classificationId;
   const data = await invModel.getInventoryByClassificationId(classification_id);
   console.log(data);
+
+  if (!data.rows || data.rows.length === 0) {
+    let err = new Error("No vehicles found for the selected classification.");
+    err.status = 404;
+    return next(err);
+  }
+
   const grid = await utilities.buildClassificationGrid(data.rows);
   console.log(grid);
   let nav = await utilities.getNav();
@@ -28,6 +35,13 @@ invCont.buildByInvID = async function (req, res, next) {
   const inv_id = req.params.invId;
   const data = await invModel.getInvItemByID(inv_id);
   console.log(data);
+
+  if (!data.rows || data.rows.length === 0) {
+    let err = new Error("Vehicle not found.");
+    err.status = 404;
+    return next(err);
+  }
+
   const detail = await utilities.buildVehicleDetail(data.rows);
   console.log(detail);
   let nav = await utilities.getNav();

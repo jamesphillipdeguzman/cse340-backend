@@ -34,6 +34,7 @@ app.use(static);
 //   res.render("index", { title: "Home" });
 // });
 app.get("/", utilities.handleErrors(baseController.buildHome));
+
 app.use("/inv", inventoryRoute);
 
 /**

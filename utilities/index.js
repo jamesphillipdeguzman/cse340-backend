@@ -85,7 +85,7 @@ Util.buildClassificationGrid = async function (data) {
  */
 
 Util.buildVehicleDetail = async function (data) {
-  let detail;
+  let detail = "";
   if (data.length > 0) {
     detail = '<div id="inv-detail">';
     data.forEach((vehicle) => {
@@ -105,21 +105,19 @@ Util.buildVehicleDetail = async function (data) {
         vehicle.inv_year + " " + vehicle.inv_make + " " + vehicle.inv_model;
       detail += "</h2>";
       detail +=
-        "<p>" +
-        "Price: " +
-        "</p>" +
+        "<p>Price:</p>" +
         "<h3>$" +
         new Intl.NumberFormat("en-US").format(vehicle.inv_price) +
         "</h3>";
       detail += "<p>" + "Description: " + vehicle.inv_description + "</p>";
       detail += "<p>" + "Color: " + vehicle.inv_color + "</p>";
       detail +=
-        "<p>" +
-        "Miles: " +
+        "<p>Miles: " +
         new Intl.NumberFormat("en-US").format(vehicle.inv_miles) +
         "</p>";
       detail += "</div>";
     });
+    detail += "</div>";
   } else {
     detail += '<p class="notice"> Sorry, no matchin vehicle was found.</p>';
   }
