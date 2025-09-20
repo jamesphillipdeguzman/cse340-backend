@@ -61,7 +61,13 @@ app.use(async (req, res, next) => {
  * Place after all other middleware
  *************************/
 app.use(async (err, req, res, next) => {
-  let nav = await utilities.getNav();
+  let nav = "";
+  try {
+    nav = await utilities.getNav();
+  } catch (error) {
+    console.error("Error getting navigation for error handler:", error);
+    nav = "<ul><li><a href='/'>Home</a></li></ul>"; // Fallback navigation
+  }
   console.error(`Error at: "${req.originalUrl}": ${err.message}`);
   let status = err.status || 500;
   let title = status === 404 ? "404 Page Not Found" : "500 Server Error";
