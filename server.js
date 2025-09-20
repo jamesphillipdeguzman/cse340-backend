@@ -51,10 +51,9 @@ app.get("/error-link", async (req, res, next) => {
 
 // File not found route
 app.use(async (req, res, next) => {
-  next({
-    status: 404,
-    message: `<span class="errormsg">Sorry, we couldn't find that page!</span>`,
-  });
+  const err = new Error("Sorry, the page you requested could not be found.");
+  err.status = 404;
+  next(err);
 });
 
 /* ***********************
