@@ -387,13 +387,13 @@ main {
   /* background-color: #ccc; */
   gap: 1rem;
   padding: 1rem;
-  margin: 1rem;
+  margin: 0 auto;
   border-radius: 3px;
   border: 1px solid #ccc;
   box-shadow: 0 5px 10px rgb(0, 0, 0, 0.5);
   height: auto;
   width: 100%;
-  max-width: 90vw;
+  max-width: 83vw;
  }
  #inv-display li {
   display: flex;
@@ -474,6 +474,13 @@ main {
   color: firebrick;
   margin: 0.8rem 0;
   padding: 0;
+}
+
+.notice {
+  color: green;
+  font-weight: bold;
+  font-size: 1rem;
+  margin: 1rem;
 }
 
 
@@ -632,19 +639,36 @@ main {
     align-items: center;
     height: auto;
     width: 100%;
-    max-width: 70vw;
+    max-width: 90vw;
     margin: 0 auto;
   }
+
+  #inv-display img {
+    width: 100%;
+    max-width: 100vw;
+    height: auto;
+    border-radius: 5px;
+    /* object-fit: cover; */
+    padding: 0.5rem;
+    align-items: center;
+  }
+
   #inv-display li {
     width: 90%;
     max-width: 80vw;
     height: auto; 
   }
 
-  #inv-display img {
-    width: 120px;
-    height: 80px;
-  }
+  
+
+  #inv-detail img {
+  width: 100%;
+  max-width: 80vw;
+  height: auto;
+  object-fit: cover;
+  border-radius: 5px;
+  margin: 0 auto;
+}
 
   main h1 {
     font-size: 1.2rem;

@@ -2,10 +2,12 @@
 <%- contentFor('hero-section') %>
     <div class="welcome">
         <h1>Welcome to CSE Motors</h1>
-        <figure>
-            <img id="hero" src="../images/vehicles/delorean.jpg" alt="hero image: delorean" height="350" width="600">
-            <figcaption>The Delorean</figcaption>
-        </figure>
+        <%- messages() %>
+            <figure>
+                <img id="hero" src="../images/vehicles/delorean.jpg" alt="hero image: delorean" height="350"
+                    width="600">
+                <figcaption>The Delorean</figcaption>
+            </figure>
     </div>
 
     <%- contentFor('feature-article1') %>
