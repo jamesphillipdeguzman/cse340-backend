@@ -124,6 +124,33 @@ Util.buildVehicleDetail = async function (data) {
   return detail;
 };
 
+/***********************************
+ * Build the login form
+ ********************************** */
+
+Util.buildLoginForm = async function (req, res, next) {
+  let login = "";
+  login += '<div class="form-wrapper">';
+  login += '<form class="signmeup" method="POST" action="/account/login">';
+  login += "<h2>Account Login</h2>";
+  login += '<div class="form-group">';
+  login += '<label for=account_email">Email address</label>';
+  login +=
+    '<input type="email" class="form-control" id="account_email" name="account_email" placeholder="Enter email" required>';
+  login += "</div>";
+  login += '<div class="form-group">';
+  login += '<label for="account_password">Password</label>';
+  login +=
+    '<input type="password" class="form-control" id="account_password" name="account_password" placeholder="Password" required>';
+  login += "</div>";
+  login += '<button type="submit" class="btn-submit">Login</button>';
+  login +=
+    '<p class="noaccount">No account? <a href="/account/signup" id="signup">Sign-up</a></p>';
+  login += "</form>";
+  login += "</div>";
+  return login;
+};
+
 /* ****************************************
  * Middleware For Handling Errors
  * Wrap other function in this for

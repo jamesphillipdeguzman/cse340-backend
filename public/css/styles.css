@@ -481,8 +481,68 @@ main {
   font-weight: bold;
   font-size: 1rem;
   margin: 1rem;
+  
 }
 
+/*********************
+* LOGIN FORM STYLES
+*********************/
+
+.form-wrapper {
+  display: flex;
+  justify-content: center;
+  background-color: #eee;
+  border-radius: 5px;
+  margin: 2rem;
+  padding: 1rem;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+  width: 300px;
+  height: auto;
+  max-width: 90vw;
+  margin: 0 auto;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 1rem;
+  /* background-color: #ccc; */
+}
+
+.btn-submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin: 0 auto;
+  padding: 0.5rem;
+  width: 100px;
+  background-color: coral;
+  color: #000;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+}
+
+.signmeup {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem;
+}
+.noaccount {
+  font-size: 0.8rem;
+}
+
+#signup {
+  margin-top: 1rem;
+  text-align: center;
+  color: navy;
+  text-decoration: underline;
+  cursor: pointer;
+}
 
  /*********************
  * MEDIA QUERIES
@@ -639,7 +699,7 @@ main {
     align-items: center;
     height: auto;
     width: 100%;
-    max-width: 90vw;
+    max-width: 100vw;
     margin: 0 auto;
   }
 
@@ -709,6 +769,19 @@ main {
   #server-error {
     font-size: 0.8rem;
     margin: 0.5rem;
+  }
+
+  .form-wrapper {
+    width: 90%;
+    max-width: 90vw;
+  }
+
+  .signmeup h2 {
+    font-size: 1rem;
+  }
+
+  .signmeup label {
+    font-size: 0.8rem;
   }
 }
 

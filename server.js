@@ -11,7 +11,9 @@ const env = require("dotenv").config();
 const app = express();
 const static = require("./routes/static");
 const baseController = require("./controllers/baseController.js");
+const accountController = require("./controllers/accountController.js");
 const inventoryRoute = require("./routes/inventoryRoute.js");
+const accountRoute = require("./routes/accountRoute.js");
 const utilities = require("./utilities/");
 const session = require("express-session");
 const pool = require("./database/");
@@ -62,6 +64,8 @@ app.use(static);
 app.get("/", utilities.handleErrors(baseController.buildHome));
 
 app.use("/inv", inventoryRoute);
+
+app.use("/account", accountRoute);
 
 /**
  * 404 Error handler
