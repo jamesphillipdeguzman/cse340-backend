@@ -17,6 +17,7 @@ const accountRoute = require("./routes/accountRoute.js");
 const utilities = require("./utilities/");
 const session = require("express-session");
 const pool = require("./database/");
+const bodyParser = require("body-parser");
 
 /* ***********************
  * Middleware
@@ -33,6 +34,9 @@ app.use(
     name: "sessionId",
   })
 );
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Express Messages Middleware
 //@ts-nocheck
