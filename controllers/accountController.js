@@ -15,4 +15,15 @@ accountController.buildLogin = async function (req, res) {
   });
 };
 
+accountController.buildRegister = async function (req, res) {
+  let nav = await utilities.getNav();
+  let register = await utilities.buildRegisterForm();
+  res.render("account/register", {
+    title: "Register",
+    nav,
+    register,
+    errors: null,
+  });
+};
+
 module.exports = accountController;
