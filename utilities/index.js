@@ -136,12 +136,14 @@ Util.buildLoginForm = async function (req, res, next) {
   login += '<div class="form-group">';
   login += '<label for="account_email">Email address</label>';
   login +=
-    '<input type="email" class="form-control" id="account_email" name="account_email" placeholder="Enter email" required>';
+    '<input type="email" class="form-control" id="account_email" name="account_email" placeholder="Enter email" required pattern="^(?=.*d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*s).{12,}$" title="Email must be a valid email address">';
   login += "</div>";
   login += '<div class="form-group">';
   login += '<label for="account_password">Password</label>';
   login +=
     '<input type="password" class="form-control" id="account_password" name="account_password" placeholder="Password" required>';
+  login +=
+    "<small>Password must be at least 12 characters and contain at least 1 uppercase letter, 1 number, and 1 special character</small>";
   login += "</div>";
   login += '<button type="submit" class="btn-submit">Login</button>';
   login +=
@@ -173,7 +175,7 @@ Util.buildRegisterForm = async function (req, res, next) {
     '<input type="email" class="form-control" id="account_email" name ="account_email" placeholder="Enter email" required>';
   register += '<label for="account_password">Password</label>';
   register +=
-    '<input type="password" class="form-control" id="account_password" name="account_password" placeholder="password" required>';
+    '<input type="password" class="form-control" id="account_password" name="account_password" placeholder="password" required pattern="^(?=.*d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*s).{12,}$" title="Password must be at least 12 characters and contain at least 1 uppercase letter, 1 number, and 1 special character">';
   register +=
     '<button type="btn-password" class="btn-password">Show Password</button>';
   register +=

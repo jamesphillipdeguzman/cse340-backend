@@ -601,6 +601,22 @@ h1 {
   cursor: pointer;
 }
 
+input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  width: 250px;
+}
+
+input:required:invalid:hover {
+  border: 2px solid red;
+}
+
+input:required:valid {
+  border: 2px solid green;
+}
+
 small {
   font-size: 0.7rem;
   color: firebrick;
