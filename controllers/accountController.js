@@ -1,28 +1,39 @@
 const utilities = require("../utilities/");
 const accountController = {};
 const accountModel = require("../models/account-model");
+const bcrypt = require("bcryptjs");
 /**
  * Build the Login view
  */
 
 accountController.buildLogin = async function (req, res) {
   let nav = await utilities.getNav();
-  let login = await utilities.buildLoginForm();
+  // assign values to res.locals
+  // res.locals.account_email = "";
+  // Assign the email back to the view if it exists
+  res.locals.account_email = req.body ? req.body.account_email : "";
+  // let login = await utilities.buildLoginForm();
   res.render("account/login", {
     title: "Login",
     nav,
-    login,
     errors: null,
+    account_email: res.locals.account_email || "", // default to empty string
   });
 };
 
 accountController.buildRegister = async function (req, res) {
   let nav = await utilities.getNav();
-  let register = await utilities.buildRegisterForm();
+
+  // assign values to res.locals
+  res.locals.account_firstname = "";
+  res.locals.account_lastname = "";
+  res.locals.account_email = "";
+
+  // let register = await utilities.buildRegisterForm();
   res.render("account/register", {
     title: "Register",
     nav,
-    register,
+    // register,
     errors: null,
   });
 };
@@ -36,12 +47,29 @@ accountController.registerAccount = async function (req, res) {
     account_password,
   } = req.body;
 
+  // Hash the password before storing
+  let hashedPassword;
+  try {
+    // regular password and cost (salt is generated automatically)
+    hashedPassword = await bcrypt.hashSync(account_password, 12);
+  } catch (error) {
+    req.flash(
+      "notice",
+      "Sorry, there was an error processing the registration."
+    );
+    res.status(500).render("account/register", {
+      title: "Registration",
+      nav,
+      errors: null,
+    });
+  }
+
   try {
     const regResult = await accountModel.registerAccount(
       account_firstname,
       account_lastname,
       account_email,
-      account_password
+      hashedPassword
     );
 
     if (regResult) {
@@ -52,7 +80,7 @@ accountController.registerAccount = async function (req, res) {
       res.status(201).render("account/login", {
         title: "Login",
         nav,
-        login: await utilities.buildLoginForm(),
+        // login: await utilities.buildLoginForm(),
         errors: null,
       });
     } else {
@@ -71,6 +99,43 @@ accountController.registerAccount = async function (req, res) {
       nav,
       register: await utilities.buildRegisterForm(),
       errors: null,
+    });
+  }
+};
+
+accountController.loginAccount = async function (req, res) {
+  try {
+    const { account_email, account_password } = req.body;
+
+    const account = await accountModel.checkAccount(
+      account_email,
+      account_password
+    );
+
+    let nav = await utilities.getNav();
+
+    if (account) {
+      // Successful login
+      return res.redirect("/");
+    } else {
+      // Failed login
+      req.flash("notice", "Please check your credentials and try again.");
+      res.status(401).render("account/login", {
+        title: "Login",
+        nav,
+        errors: null,
+        account_email,
+      });
+    }
+  } catch (error) {
+    console.error("Login error:", error);
+    let nav = await utilities.getNav();
+    req.flash("notice", "An error occurred during login. Try again.");
+    res.status(500).render("account/login", {
+      title: "Login",
+      nav,
+      errors: null,
+      account_email: req.body?.account_email || "",
     });
   }
 };

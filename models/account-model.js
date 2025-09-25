@@ -47,4 +47,40 @@ async function registerAccount(
     throw error;
   }
 }
-module.exports = { registerAccount };
+
+/* **********************
+ *   Check for existing email
+ * ********************* */
+async function checkExistingEmail(account_email) {
+  try {
+    const sql = "SELECT * FROM account WHERE account_email = $1";
+    const email = await pool.query(sql, [account_email]);
+    return email.rowCount;
+  } catch (error) {
+    return error.message;
+  }
+}
+
+/* *************************
+ * Check Account
+ * *********************** */
+async function checkAccount(account_email, account_password) {
+  try {
+    const sql = "SELECT * FROM public.account WHERE account_email = $1";
+    const result = await pool.query(sql, [account_email]);
+    const account = result.rows[0];
+    if (!account) return null;
+
+    const passwordMatch = await bcrypt.compare(
+      account_password,
+      account.account_password
+    );
+    if (passwordMatch) return account;
+    return null;
+  } catch (error) {
+    console.error("checkAccount error", error);
+    throw error;
+  }
+}
+
+module.exports = { registerAccount, checkExistingEmail, checkAccount };

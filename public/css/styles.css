@@ -544,7 +544,7 @@ h1 {
   border-radius: 5px;
 }
 
-.login {
+#loginForm {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -553,12 +553,12 @@ h1 {
   padding: 0;
 }
 
-.login label {
+#loginForm label {
   font-size: 0.9rem;
   /* margin: 0.5rem 0; */
 }
 
-.login h2 {
+#loginForm h2 {
     font-size: 1rem;
 }
 

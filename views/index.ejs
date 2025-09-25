@@ -1,7 +1,8 @@
 <hr>
 <%- contentFor('hero-section') %>
     <div class="welcome">
-        <h1>Welcome to CSE Motors</h1>
+        <h1>Welcome to CSE Motors <%= locals.account_firstname %>
+        </h1>
         <%- messages() %>
             <figure>
                 <img id="hero" src="../images/vehicles/delorean.jpg" alt="hero image: delorean" height="350"
