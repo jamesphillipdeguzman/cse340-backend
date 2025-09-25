@@ -12,6 +12,7 @@ accountController.buildLogin = async function (req, res) {
     title: "Login",
     nav,
     login,
+    errors: null,
   });
 };
 
@@ -52,6 +53,7 @@ accountController.registerAccount = async function (req, res) {
         title: "Login",
         nav,
         login: await utilities.buildLoginForm(),
+        errors: null,
       });
     } else {
       req.flash("notice", " Sorry, the registration failed.");

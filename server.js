@@ -107,6 +107,7 @@ app.use(async (err, req, res, next) => {
     title,
     message,
     nav,
+    errors: null,
   });
 });
 

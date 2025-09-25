@@ -496,6 +496,13 @@ h1 {
   
 }
 
+.warnings {
+  color: firebrick;
+  font-weight: bold;
+  font-size: 1rem;
+  margin: 1rem;
+}
+
 /*********************
 * LOGIN FORM STYLES
 *********************/
