@@ -46,8 +46,23 @@ async function getInvItemByID(inv_id) {
   }
 }
 
+/**
+ * Post a new classification
+ */
+async function addClassification(classification_name) {
+  try {
+    const sql =
+      "INSERT INTO public.classification (classification_name) VALUES ($1) RETURNING *";
+    const result = await pool.query(sql, [classification_name]);
+    return result;
+  } catch (error) {
+    console.error("addClassification error " + error);
+  }
+}
+
 module.exports = {
   getClassifications,
   getInventoryByClassificationId,
   getInvItemByID,
+  addClassification,
 };

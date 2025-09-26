@@ -187,6 +187,37 @@ Util.buildVehicleDetail = async function (data) {
 //   return register;
 // };
 
+/**
+ * ****************************************
+ * Build the Add Classification View
+ * ****************************************
+ */
+
+Util.buildAddClassification = async function (req, res, next) {
+  let addClassification = "";
+  addClassification += '<div class="form-wrapper">';
+  addClassification +=
+    '<form class="new-classification" method="POST" action="/inv/addClassification">';
+  addClassification += "<h2>Add New Classification</h2>";
+  addClassification += '<div class="form-group">';
+  addClassification += "<hr />";
+  addClassification += '<p class="warnings">Field is required.</p>';
+  addClassification +=
+    '<label for="classification_name">Classification Name</label>';
+  addClassification +=
+    '<span id="alphanumeric">Name must be alphabetic characters only.</span>';
+  addClassification +=
+    '<input type="text" class="form-control" id="classification_name" name="classification_name" placeholder="Enter classification name" required pattern="^([A-Za-z]+\\s)*[A-Za-z]+$" title="Classification name must be alphabetic characters only." value="' +
+    (res.locals.classification_name ? res.locals.classification_name : "") +
+    '">';
+  addClassification += "</div>";
+  addClassification +=
+    '<button type="submit" class="btn-submit">Add Classification</button>';
+  addClassification += "</form>";
+  addClassification += "</div>";
+  return addClassification;
+};
+
 /* ****************************************
  * Middleware For Handling Errors
  * Wrap other function in this for

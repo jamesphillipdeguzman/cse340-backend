@@ -21,22 +21,23 @@ accountController.buildLogin = async function (req, res) {
   });
 };
 
+// Build the Registration view
+
 accountController.buildRegister = async function (req, res) {
   let nav = await utilities.getNav();
-
-  // assign values to res.locals
-  res.locals.account_firstname = "";
-  res.locals.account_lastname = "";
-  res.locals.account_email = "";
 
   // let register = await utilities.buildRegisterForm();
   res.render("account/register", {
     title: "Register",
     nav,
-    // register,
     errors: null,
+    account_firstname: res.locals.account_firstname || "",
+    account_lastname: res.locals.account_lastname || "",
+    account_email: res.locals.account_email || "",
   });
 };
+
+// Process Registration request
 
 accountController.registerAccount = async function (req, res) {
   let nav = await utilities.getNav();
@@ -51,7 +52,7 @@ accountController.registerAccount = async function (req, res) {
   let hashedPassword;
   try {
     // regular password and cost (salt is generated automatically)
-    hashedPassword = await bcrypt.hashSync(account_password, 12);
+    hashedPassword = bcrypt.hashSync(account_password, 10);
   } catch (error) {
     req.flash(
       "notice",
@@ -61,6 +62,9 @@ accountController.registerAccount = async function (req, res) {
       title: "Registration",
       nav,
       errors: null,
+      account_firstname,
+      account_lastname,
+      account_email,
     });
   }
 
@@ -80,8 +84,8 @@ accountController.registerAccount = async function (req, res) {
       res.status(201).render("account/login", {
         title: "Login",
         nav,
-        // login: await utilities.buildLoginForm(),
         errors: null,
+        account_email: account_email,
       });
     } else {
       req.flash("notice", " Sorry, the registration failed.");
@@ -89,6 +93,9 @@ accountController.registerAccount = async function (req, res) {
         title: "Register",
         nav,
         errors: null,
+        account_firstname,
+        account_lastname,
+        account_email,
       });
     }
   } catch (error) {
@@ -97,28 +104,47 @@ accountController.registerAccount = async function (req, res) {
     res.status(501).render("account/register", {
       title: "Register",
       nav,
-      register: await utilities.buildRegisterForm(),
       errors: null,
+      account_firstname,
+      account_lastname,
+      account_email,
     });
   }
 };
 
+// Process Login request
+
 accountController.loginAccount = async function (req, res) {
   try {
     const { account_email, account_password } = req.body;
+
+    console.log("Login attempt body:", req.body);
+
+    if (!account_email || !account_password) {
+      return res.status(400).send("Email and password are required.");
+    }
 
     const account = await accountModel.checkAccount(
       account_email,
       account_password
     );
 
+    if (!account) {
+      console.log("Authentication failed for:", account_email);
+    }
+
     let nav = await utilities.getNav();
 
     if (account) {
+      console.log("Account found:", account);
+      req.session.account = account;
       // Successful login
+      console.log("Login successful for:", account.account_email); // Here?
       return res.redirect("/");
     } else {
       // Failed login
+      console.log("Account not found:", account);
+      console.log("Login failed for:", account_email);
       req.flash("notice", "Please check your credentials and try again.");
       res.status(401).render("account/login", {
         title: "Login",

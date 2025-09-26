@@ -55,13 +55,86 @@ invCont.buildByInvID = async function (req, res, next) {
 };
 
 /**
+ * Build the inventory management view
+ */
+invCont.buildManagement = async function (req, res, next) {
+  let nav = await utilities.getNav();
+  res.render("inventory/management", {
+    title: "Vehicle Management",
+    nav,
+    errors: null,
+    management: "",
+  });
+};
+
+/**
+ * Build the add classification view
+ */
+invCont.buildAddClassification = async function (req, res, next) {
+  try {
+    let nav = await utilities.getNav();
+
+    // Generate the form HTML
+    const formHTML = await utilities.buildAddClassification(req, res);
+
+    res.render("inventory/addClassification", {
+      title: "Add Classification",
+      nav,
+      errors: null,
+      classification_name: req.body?.classification_name || "",
+      addClassification: formHTML,
+    });
+  } catch (error) {
+    console.error("Error building add classification view: ", error);
+    next(error);
+  }
+};
+
+// Process new classification form submission
+invCont.addClassification = async function (req, res, next) {
+  try {
+    const { classification_name } = req.body;
+    const regResult = await invModel.addClassification(classification_name);
+
+    if (regResult) {
+      req.flash("notice", `New classification added: ${classification_name}`);
+      return res.redirect("/inv");
+    } else {
+      // Rebuild nav and formHTML for re-rendering the page
+      let nav = await utilities.getNav();
+      const formHTML = await utilities.buildAddClassification(req, res);
+
+      req.flash("notice", "Sorry, adding the classification failed.");
+      return res.status(501).render("inventory/addClassification", {
+        title: "Add Classification",
+        nav,
+        errors: null,
+        classification_name,
+        addClassification: formHTML,
+      });
+    }
+  } catch (error) {
+    console.error("Error adding new classification: ", error);
+    // Rebuild nav and formHTML for re-rendering the page
+    let nav = await utilities.getNav();
+    const formHTML = await utilities.buildAddClassification(req, res);
+    req.flash("notice", "Sorry, adding the classification failed.");
+    res.status(501).render("inventory/addClassification", {
+      title: "Add Classification",
+      nav,
+      errors: null,
+      classification_name: req.body?.classification_name || "",
+      addClassification: formHTML,
+    });
+  }
+};
+
+/**
  * Deliberately cause a 500 server error for testing purposes.
  */
 invCont.throw500 = async (req, res, next) => {
   res.status(500);
-  next(new Error("Intentional server error."));   
+  next(new Error("Intentional server error."));
 };
-
-
 
 module.exports = invCont;

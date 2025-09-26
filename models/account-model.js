@@ -1,4 +1,5 @@
 const pool = require("../database/");
+const bcrypt = require("bcryptjs");
 
 /*******
  * Register a new account
@@ -26,6 +27,9 @@ async function registerAccount(
       throw new Error("Email already registered.");
     }
 
+    // Hash the password before storing
+    const hashedPassword = await bcrypt.hash(account_password, 10);
+
     const sql = `INSERT INTO public.account 
         (
         account_firstname, 
@@ -38,7 +42,7 @@ async function registerAccount(
       account_firstname,
       account_lastname,
       account_email,
-      account_password,
+      hashedPassword,
     ]);
 
     return result.rows[0];
@@ -69,12 +73,19 @@ async function checkAccount(account_email, account_password) {
     const sql = "SELECT * FROM public.account WHERE account_email = $1";
     const result = await pool.query(sql, [account_email]);
     const account = result.rows[0];
-    if (!account) return null;
+    if (!account) {
+      console.log("No account found for", account_email);
+      return null;
+    }
+
+    console.log("Entered password:", account_password);
+    console.log("Stored hash", account.account_password);
 
     const passwordMatch = await bcrypt.compare(
       account_password,
       account.account_password
     );
+    console.log("Password match:", passwordMatch);
     if (passwordMatch) return account;
     return null;
   } catch (error) {

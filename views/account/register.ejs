@@ -22,20 +22,20 @@
                             <div class="form-group">
                                 <label for="account_firstname">First Name</label>
                                 <input type="text" class="form-control" id="account_firstname" name="account_firstname"
-                                    placeholder="Enter first name" required value="<%= locals.account_firstname %>">
+                                    placeholder="Enter first name" required value="<%= account_firstname || '' %>">
 
                                 <label for="account_lastname">Last Name</label>
                                 <input type="text" class="form-control" id="account_lastname" name="account_lastname"
-                                    placeholder="Enter last name" required value="<%= locals.account_lastname %>">
+                                    placeholder="Enter last name" required value="<%= account_lastname || '' %>">
 
                                 <label for="account_email">Email address</label>
                                 <input type="email" class="form-control" id="account_email" name="account_email"
-                                    placeholder="Enter email" required value="<%= locals.account_email %>">
+                                    placeholder="Enter email" required value="<%= account_email || '' %>">
 
                                 <label for="account_password">Password</label>
                                 <input type="password" class="form-control" id="account_password"
                                     name="account_password" placeholder="Password" required
-                                    pattern="^(?=.*d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*s).{12,}$"
+                                    pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$"
                                     title="Password must be at least 12 characters and contain at least 1 uppercase letter, 1 number, and 1 special character">
                                 <button type="button" class="btn-password">Show Password</button>
                                 <small>Password must be at least 12 characters and contain at least 1 uppercase letter,
