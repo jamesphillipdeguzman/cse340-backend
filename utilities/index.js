@@ -218,6 +218,111 @@ Util.buildAddClassification = async function (req, res, next) {
   return addClassification;
 };
 
+/**
+ * ****************************************
+ * Build the Add Inventory View
+ * ****************************************
+ */
+
+Util.buildAddInventory = async function (req, res, next) {
+  let addInventory = "";
+  addInventory += '<div class="form-wrapper">';
+  addInventory +=
+    '<form class="new-inventory" method="POST" action="/inv/add-inventory">';
+  addInventory += "<h2>Add New Inventory</h2>";
+  addInventory += '<div class="form-group">';
+  addInventory += "<hr />";
+  addInventory += '<p class="warnings">All fields are required.</p>';
+
+  // Replace text input with dropdown for classifications
+  addInventory += '<label for="classification_id">Classification</label>';
+  addInventory +=
+    '<select id="classification_id" name="classification_id" required title="Classification">';
+
+  // Fetch classifications from DB
+  const data = await invModel.getClassifications();
+
+  data.rows.forEach((row) => {
+    const selected =
+      res.locals.classification_id == row.classification_id ? "selected" : "";
+    addInventory += `<option value="${row.classification_id}"> ${selected}${row.classification_name}</option>`;
+  });
+  addInventory += "</select>";
+
+  // Add the rest of the inventory fields here...
+  // Make
+  addInventory += '<label for="inv_make">Make</label>';
+  addInventory +=
+    '<input type="text" class="form-control" id="inv_make" name="inv_make" placeholder="Min of 3 characters" ' +
+    'required pattern="^[A-Za-z ]+$" minlength="2" ' +
+    'title= "Make" value="' +
+    (res.locals.inv_make ? res.locals.inv_make : "") +
+    '">';
+  // Model
+  addInventory += '<label for="inv_model">Model</label>';
+  addInventory +=
+    '<input type="text" class="form-control" id="inv_model" name="inv_model" placeholder="Min of 3 characters" ' +
+    'required pattern="^[A-Za-z ]+$" minlength="2" ' +
+    'title= "Model" value="' +
+    (res.locals.inv_model ? res.locals.inv_model : "") +
+    '">';
+  // Description
+  addInventory += '<label for="inv_description">Description</label>';
+  addInventory +=
+    '<textarea id="inv_description" name="inv_description" ' +
+    'rows="4" cols="30" placeholder="Enter a description" ' +
+    'required title= "Description">' +
+    (res.locals.inv_description ? res.locals.inv_description : "") +
+    "</textarea>";
+  // Image Path
+  addInventory += '<label for="inv_image">Image Path</label>';
+  addInventory +=
+    '<input type="text" class="form-control" id="inv_image" name="inv_image" placeholder="/images/vehicles/no-image.png" required title="Image Path" value="' +
+    (res.locals.inv_image ? res.locals.inv_image : "") +
+    '">';
+  // Thumbnail Path
+  addInventory += '<label for="inv_thumbnail">Thumbnail Path</label>';
+  addInventory +=
+    '<input type="text" class="form-control" id="inv_thumbnail" name="inv_thumbnail" placeholder="/images/vehicles/no-image.png" required title="Thumbnail Path" value="' +
+    (res.locals.inv_thumbnail ? res.locals.inv_thumbnail : "") +
+    '">';
+  // Price
+  addInventory += '<label for="inv_price">Price</label>';
+  addInventory +=
+    '<input type="number" class="form-control" id="inv_price" name="inv_price" placeholder="Enter price (e.g., 99.99)" required title="Price" min="0" step="0.01" value="' +
+    (res.locals.inv_price ? res.locals.inv_price : "") +
+    '">';
+  // Year
+  addInventory += '<label for="inv_year">Year</label>';
+  addInventory +=
+    '<input type="number" class="form-control" id="inv_year" name="inv_year" placeholder="Enter year (e.g., 2025)" required title="Year" min="1900" max="2099" value="' +
+    (res.locals.inv_year ? res.locals.inv_year : "") +
+    '">';
+  // Miles
+  addInventory += '<label for="inv_miles">Miles</label>';
+  addInventory +=
+    '<input type="text" class="form-control" id="inv_miles" name="inv_miles" placeholder="Enter miles (e.g., 3000)" required ' +
+    'pattern="^\\d+$" ' +
+    'title="Miles" min="0" value="' +
+    (res.locals.inv_miles ? res.locals.inv_miles : "") +
+    '">';
+  // Color
+  addInventory += '<label for="inv_color">Color</label>';
+  addInventory +=
+    '<input type="text" class="form-control" id="inv_color" name="inv_color" placeholder="Enter color (e.g., red)" ' +
+    'required title="Color" pattern="^[A-Za-z ]+$" minlength="2" ' +
+    'title= "Color must be alphabetic characters only." value="' +
+    (res.locals.inv_color ? res.locals.inv_color : "") +
+    '">';
+
+  addInventory += "</div>";
+  addInventory +=
+    '<button type="submit" class="btn-submit">Add Vehicle</button>';
+  addInventory += "</form>";
+  addInventory += "</div>";
+  return addInventory;
+};
+
 /* ****************************************
  * Middleware For Handling Errors
  * Wrap other function in this for

@@ -129,6 +129,29 @@ invCont.addClassification = async function (req, res, next) {
 };
 
 /**
+ * Build the add inventory view
+ */
+invCont.buildAddInventory = async function (req, res, next) {
+  try {
+    let nav = await utilities.getNav();
+
+    // Generate the form HTML
+    const formHTML = await utilities.buildAddInventory(req, res);
+
+    res.render("inventory/addInventory", {
+      title: "Add Inventory",
+      nav,
+      errors: null,
+      inv_make: req.body?.inv_make || "",
+      addInventory: formHTML,
+    });
+  } catch (error) {
+    console.error("Error building add inventory view: ", error);
+    next(error);
+  }
+};
+
+/**
  * Deliberately cause a 500 server error for testing purposes.
  */
 invCont.throw500 = async (req, res, next) => {

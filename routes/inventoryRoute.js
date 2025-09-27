@@ -34,6 +34,20 @@ router.post(
   utilities.handleErrors(invController.addClassification)
 );
 
+// Route to build add inventory view
+router.get(
+  "/add-inventory",
+  utilities.handleErrors(invController.buildAddInventory)
+);
+
+// Handle new inventory form submission
+router.post(
+  "/add-inventory",
+  validate.newInventoryRules(),
+  validate.checkNewInventoryData,
+  utilities.handleErrors(invController.addInventory)
+);
+
 /**
  * Deliberately cause a server error for testing purposes.
  *

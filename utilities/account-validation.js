@@ -14,8 +14,10 @@ validate.loginRules = () => {
       .escape()
       .notEmpty()
       .withMessage("An email is required.")
+      .bail()
       .isEmail()
       .withMessage("Please provide a valid email address.")
+      .bail()
       .normalizeEmail(), // refer to validator.js docs
     // password is required
     body("account_password")
@@ -56,7 +58,8 @@ validate.registrationRules = () => {
       .trim()
       .escape()
       .notEmpty()
-      .withMessage("Please provide a first name.") // on error this message is sent.
+      .withMessage("Please provide a first name.")
+      .bail() // on error this message is sent.
       .isLength({ min: 2 })
       .withMessage("First name must be at least 2 characters."),
 
@@ -65,7 +68,8 @@ validate.registrationRules = () => {
       .trim()
       .escape()
       .notEmpty()
-      .withMessage("Please provide a last name.") // on error this message is sent.
+      .withMessage("Please provide a last name.")
+      .bail() // on error this message is sent.
       .isLength({ min: 2 })
       .withMessage("Last name must be at least 2 characters."),
 
@@ -75,8 +79,10 @@ validate.registrationRules = () => {
       .escape()
       .notEmpty()
       .withMessage("An email is required.")
+      .bail()
       .isEmail()
       .withMessage("Please provide a valid email address.")
+      .bail()
       .custom(async (account_email) => {
         const emailExists = await accountModel.checkExistingEmail(
           account_email
@@ -94,6 +100,7 @@ validate.registrationRules = () => {
       .trim()
       .notEmpty()
       .withMessage("A password is required.")
+      .bail()
       .isStrongPassword({
         minLength: 12,
         minLowercase: 1,

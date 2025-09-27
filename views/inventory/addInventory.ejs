@@ -1,0 +1,20 @@
+<% if (title) { %>
+    <h1>
+        <%= title %>
+    </h1>
+
+    <% } %>
+
+        <%#- messages() %>
+            <% if (errors) { %>
+                <ul class="warnings">
+                    <% errors.forEach(error=> { %>
+                        <li>
+                            <%= error.msg %>
+                        </li>
+                        <% }) %>
+                </ul>
+                <% } %>
+
+
+                    <%- addInventory %>
