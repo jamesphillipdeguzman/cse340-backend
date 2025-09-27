@@ -1,7 +1,6 @@
-const invModel = require("../models/inventory-model");
 const utilities = require("../utilities/");
-
 const invCont = {};
+const invModel = require("../models/inventory-model");
 
 /* ************************
  * Build the classification view

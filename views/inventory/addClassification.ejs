@@ -2,8 +2,19 @@
     <h1>
         <%= title %>
     </h1>
-    <% } else { res.redirect("/") } %>
 
-        <%- messages() %>
+    <% } %>
 
-            <%- addClassification %>
+        <%#- messages() %>
+            <% if (errors) { %>
+                <ul class="warnings">
+                    <% errors.forEach(error=> { %>
+                        <li>
+                            <%= error.msg %>
+                        </li>
+                        <% }) %>
+                </ul>
+                <% } %>
+
+
+                    <%- addClassification %>

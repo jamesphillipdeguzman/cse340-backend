@@ -24,6 +24,7 @@ async function registerAccount(
     );
 
     if (check.rows.length > 0) {
+      console.log("Email is already registered.");
       throw new Error("Email already registered.");
     }
 

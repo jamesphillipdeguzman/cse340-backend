@@ -522,6 +522,11 @@ h1 {
   margin: 0 auto;
 }
 
+.form-wrapper h2 {
+  text-align: center;
+  font-size: 1rem;
+}
+
 .form-group {
   display: flex;
   flex-direction: column;
@@ -577,6 +582,14 @@ h1 {
     font-size: 1rem;
 }
 
+#loginForm hr {
+  width: 100%;
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin: 0.5rem 0;
+}
+
+
 .signmeup {
   display: flex;
   flex-direction: column;
@@ -594,6 +607,13 @@ h1 {
 
 .signmeup h2 {
     font-size: 1rem;
+}
+
+.signmeup hr {
+  width: 100%;
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin: 0.5rem 0;
 }
 
 .btn-password {
@@ -927,6 +947,7 @@ small {
   .form-wrapper {
     width: 90%;
     max-width: 90vw;
+    height: auto;
   }
 
   .signmeup h2 {

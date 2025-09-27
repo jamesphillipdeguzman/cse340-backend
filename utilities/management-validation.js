@@ -36,7 +36,7 @@ validate.checkNewClassificationData = async (req, res, next) => {
     res.render("inventory/addClassification", {
       title: "Add Classification",
       nav,
-      errors,
+      errors: errors.array(),
       classification_name: res.locals.classification_name || "",
       addClassification: formHTML,
     });
