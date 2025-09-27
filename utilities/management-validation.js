@@ -11,12 +11,11 @@ validate.newClassificationRules = () => {
     // classification name is required and must be alphabetic characters only
     body("classification_name")
       .trim()
-      .escape()
       .notEmpty()
       .withMessage("Please provide a classification name.") // on error this messag is sent.
       .isLength({ min: 2 })
       .withMessage("Classification name must be at least 2 characters.")
-      .matches(/^([A-Za-z]+\s)*[A-Za-z]+$/)
+      .matches(/^[A-Za-z]+$/)
       .withMessage("Classification name must be alphabetic characters only."),
   ];
 };

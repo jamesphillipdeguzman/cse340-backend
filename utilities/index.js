@@ -207,7 +207,7 @@ Util.buildAddClassification = async function (req, res, next) {
   addClassification +=
     '<span id="alphanumeric">Name must be alphabetic characters only.</span>';
   addClassification +=
-    '<input type="text" class="form-control" id="classification_name" name="classification_name" placeholder="Enter classification name" required pattern="^([A-Za-z]+\\s)*[A-Za-z]+$" title="Classification name must be alphabetic characters only." value="' +
+    '<input type="text" class="form-control" id="classification_name" name="classification_name" placeholder="Enter classification name" required pattern="^[A-Za-z]+$" title="Classification name must be alphabetic characters only." value="' +
     (res.locals.classification_name ? res.locals.classification_name : "") +
     '">';
   addClassification += "</div>";
