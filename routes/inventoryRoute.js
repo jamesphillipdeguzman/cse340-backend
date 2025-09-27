@@ -22,13 +22,13 @@ router.get("/", utilities.handleErrors(invController.buildManagement));
 
 // Route to build add classification view
 router.get(
-  "/addClassification",
+  "/add-classification",
   utilities.handleErrors(invController.buildAddClassification)
 );
 
 // Handle new classification form submission
 router.post(
-  "/addClassification",
+  "/add-classification",
   validate.newClassificationRules(),
   validate.checkNewClassificationData,
   utilities.handleErrors(invController.addClassification)

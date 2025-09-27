@@ -197,7 +197,7 @@ Util.buildAddClassification = async function (req, res, next) {
   let addClassification = "";
   addClassification += '<div class="form-wrapper">';
   addClassification +=
-    '<form class="new-classification" method="POST" action="/inv/addClassification">';
+    '<form class="new-classification" method="POST" action="/inv/add-classification">';
   addClassification += "<h2>Add New Classification</h2>";
   addClassification += '<div class="form-group">';
   addClassification += "<hr />";
