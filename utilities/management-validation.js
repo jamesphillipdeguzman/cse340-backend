@@ -12,9 +12,11 @@ validate.newClassificationRules = () => {
     body("classification_name")
       .trim()
       .notEmpty()
-      .withMessage("Please provide a classification name.") // on error this message is sent.
+      .withMessage("Please provide a classification name.")
+      .bail() // on error this message is sent.
       .isLength({ min: 2 })
       .withMessage("Classification name must be at least 2 characters.")
+      .bail()
       .matches(/^[A-Za-z]+$/)
       .withMessage("Provide a correct classification name."),
   ];
