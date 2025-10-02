@@ -100,6 +100,35 @@ validate.newInventoryRules = () => {
       .bail()
       .matches(/^[A-Za-z0-9\s-]+$/)
       .withMessage("Provide a correct model."),
+    // inv_description is required
+    body("inv_description")
+      .trim()
+      .escape()
+      .notEmpty()
+      .withMessage("Please provide a description.")
+      .bail() // on error this message is sent.
+      .isLength({ min: 7 })
+      .withMessage("Description must be at least 7 characters."),
+    // inv_image is required
+    body("inv_image")
+      .trim()
+      .escape()
+      .notEmpty()
+      .withMessage("Please provide an image.")
+      .bail() // on error this message is sent.
+      .matches(/^\/images\/vehicles\/.+\.(jpg|png|jpeg)$/i)
+      .withMessage("Use path format: /images/vehicles/vehiclename.jpg"),
+
+    // inv_thumbnail is required
+    body("inv_thumbnail")
+      .trim()
+      .escape()
+      .notEmpty()
+      .withMessage("Please provide a thumbnail.")
+      .bail() // on error this message is sent.
+      .matches(/^\/images\/vehicles\/.+\.(jpg|png|jpeg)$/i)
+      .withMessage("Use thumbnail format: /images/vehicles/vehiclename.jpg"),
+
     // price must be non-negative
     body("inv_price")
       .trim()
@@ -153,12 +182,24 @@ validate.newInventoryRules = () => {
  * Check data and return errors or continue to add classification
  * ***************************** */
 validate.checkNewInventoryData = async (req, res, next) => {
-  const { inv_make, inv_model, inv_price, inv_year, inv_miles, inv_color } =
-    req.body;
+  const {
+    inv_make,
+    inv_model,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_year,
+    inv_miles,
+    inv_color,
+  } = req.body;
   let errors = [];
   errors = validationResult(req);
   res.locals.inv_make = inv_make || "";
   res.locals.inv_model = inv_model || "";
+  res.locals.inv_description = inv_description || "";
+  res.locals.inv_image = inv_image || "";
+  res.locals.inv_thumbnail = inv_thumbnail || "";
   res.locals.inv_price = inv_price || "";
   res.locals.inv_year = inv_year || "";
   res.locals.inv_miles = inv_miles || "";
@@ -173,6 +214,9 @@ validate.checkNewInventoryData = async (req, res, next) => {
       errors: errors.array(),
       inv_make: res.locals.inv_make || "",
       inv_model: res.locals.inv_model || "",
+      inv_description: res.locals.inv_description || "",
+      inv_image: res.locals.inv_image || "",
+      inv_thumbnail: res.locals.inv_thumbnail || "",
       inv_price: res.locals.inv_price || "",
       inv_year: res.locals.inv_year || "",
       inv_miles: res.locals.inv_miles || "",

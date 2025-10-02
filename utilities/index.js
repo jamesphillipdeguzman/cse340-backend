@@ -238,6 +238,7 @@ Util.buildAddInventory = async function (req, res, next) {
   addInventory += '<label for="classification_id">Classification</label>';
   addInventory +=
     '<select id="classification_id" name="classification_id" required title="Classification">';
+  addInventory += '<option value="">-- Select Classification --</option>';
 
   // Fetch classifications from DB
   const data = await invModel.getClassifications();
@@ -253,7 +254,7 @@ Util.buildAddInventory = async function (req, res, next) {
   // Make
   addInventory += '<label for="inv_make">Make</label>';
   addInventory +=
-    '<input type="text" class="form-control" id="inv_make" name="inv_make" placeholder="Min of 3 characters" ' +
+    '<input type="text" class="form-control" id="inv_make" name="inv_make" placeholder="Min of 2 characters" ' +
     'required pattern="^[A-Za-z ]+$" minlength="2" ' +
     'title= "Make" value="' +
     (res.locals.inv_make ? res.locals.inv_make : "") +
@@ -261,7 +262,7 @@ Util.buildAddInventory = async function (req, res, next) {
   // Model
   addInventory += '<label for="inv_model">Model</label>';
   addInventory +=
-    '<input type="text" class="form-control" id="inv_model" name="inv_model" placeholder="Min of 3 characters" ' +
+    '<input type="text" class="form-control" id="inv_model" name="inv_model" placeholder="Min of 2 characters" ' +
     'required pattern="^[A-Za-z ]+$" minlength="2" ' +
     'title= "Model" value="' +
     (res.locals.inv_model ? res.locals.inv_model : "") +
@@ -303,7 +304,7 @@ Util.buildAddInventory = async function (req, res, next) {
   addInventory +=
     '<input type="text" class="form-control" id="inv_miles" name="inv_miles" placeholder="Enter miles (e.g., 3000)" required ' +
     'pattern="^\\d+$" ' +
-    'title="Miles" min="0" value="' +
+    'title="Miles" value="' +
     (res.locals.inv_miles ? res.locals.inv_miles : "") +
     '">';
   // Color

@@ -659,7 +659,7 @@ label {
   cursor: pointer;
 }
 
-input {
+input, textarea {
   padding: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -668,25 +668,30 @@ input {
   transition: border-color 0.3s, background-color 0.3s;
 }
 
-input:invalid {
+input:invalid,
+textarea:invalid {
   background-color: #ffdddd;
   border: 2px solid red;
 }
 
-input:valid {
+input:valid,
+textarea:valid {
   background-color: #ddffdd;
   border: 2px solid green;
 }
 
-input:required:invalid:hover {
+input:required:invalid:hover,
+textarea:required:invalid:hover {
   border: 2px solid darkred;
 }
 
-input:required:valid {
+input:required:valid,
+textarea:required:valid {
   border: 2px solid green;
 }
 
-input:focus {
+input:focus,
+textarea:focus {
   outline: none;
   /* border: 2px solid #555; */
   box-shadow: 0 0 5px rgba(81, 203, 238, 1);
@@ -695,7 +700,7 @@ input:focus {
 
 small {
   font-size: 0.7rem;
-  color: firebrick;
+  color: #000;
   margin-top: 0.5rem;
 }
 
