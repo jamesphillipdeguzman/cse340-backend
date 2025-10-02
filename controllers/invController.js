@@ -134,6 +134,7 @@ invCont.addClassification = async function (req, res, next) {
 invCont.buildAddInventory = async function (req, res, next) {
   try {
     let nav = await utilities.getNav();
+    const classifications = await invModel.getClassifications(); // fetch the list
 
     // Generate the form HTML
     const formHTML = await utilities.buildAddInventory(req, res);
@@ -142,12 +143,100 @@ invCont.buildAddInventory = async function (req, res, next) {
       title: "Add Inventory",
       nav,
       errors: null,
+      classifications: classifications.rows, // pass to view
       inv_make: req.body?.inv_make || "",
       addInventory: formHTML,
     });
   } catch (error) {
     console.error("Error building add inventory view: ", error);
     next(error);
+  }
+};
+
+/**
+ * Process new inventory submission
+ */
+
+invCont.addInventory = async function (req, res, next) {
+  try {
+    console.log("REQ BODY:", req.body);
+    const {
+      inv_make,
+      inv_model,
+      inv_year,
+      inv_description,
+      inv_image,
+      inv_thumbnail,
+      inv_price,
+      inv_miles,
+      inv_color,
+      classification_id,
+    } = req.body;
+
+    // Call model and insert to DB
+    const regResult = await invModel.addInventory({
+      inv_make,
+      inv_model,
+      inv_year,
+      inv_description,
+      inv_image,
+      inv_thumbnail,
+      inv_price,
+      inv_miles,
+      inv_color,
+      classification_id,
+    });
+
+    if (regResult) {
+      req.flash(
+        "notice",
+        `New inventory item added: ${inv_year} ${inv_make} ${inv_model}`
+      );
+      return res.redirect("/inv");
+    } else {
+      let nav = await utilities.getNav();
+      const formHTML = await utilities.buildAddInventory(req, res);
+
+      req.flash("notice", "Sorry, adding the inventory failed.");
+      return res.status(501).render("inventory/addInventory", {
+        title: "Add Inventory",
+        nav,
+        errors: null,
+        inv_make,
+        inv_model,
+        inv_year,
+        inv_description,
+        inv_image,
+        inv_thumbnail,
+        inv_price,
+        inv_miles,
+        inv_color,
+        classification_id,
+        addInventory: formHTML,
+      });
+    }
+  } catch (error) {
+    console.error("Error adding new inventory: ", error);
+    let nav = await utilities.getNav();
+    const formHTML = await utilities.buildAddInventory(req, res);
+
+    req.flash("notice", "Sorry, adding the inventory failed.");
+    return res.status(501).render("inventory/addInventory", {
+      title: "Add Inventory",
+      nav,
+      errors: null,
+      inv_make: req.body?.inv_make || "",
+      inv_model: req.body?.inv_model || "",
+      inv_year: req.body?.inv_year || "",
+      inv_description: req.body?.inv_description || "",
+      inv_image: req.body?.inv_image || "",
+      inv_thumbnail: req.body?.inv_thumbnail || "",
+      inv_price: req.body?.inv_price || "",
+      inv_miles: req.body?.inv_miles || "",
+      inv_color: req.body?.inv_color || "",
+      classification_id: req.body?.classification_id || "",
+      addInventory: formHTML,
+    });
   }
 };
 

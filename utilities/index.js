@@ -245,7 +245,7 @@ Util.buildAddInventory = async function (req, res, next) {
   data.rows.forEach((row) => {
     const selected =
       res.locals.classification_id == row.classification_id ? "selected" : "";
-    addInventory += `<option value="${row.classification_id}"> ${selected}${row.classification_name}</option>`;
+    addInventory += `<option value="${row.classification_id}" ${selected}>${row.classification_name}</option>`;
   });
   addInventory += "</select>";
 

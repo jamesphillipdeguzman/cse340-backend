@@ -13,11 +13,19 @@ validate.newClassificationRules = () => {
       .trim()
       .notEmpty()
       .withMessage("Please provide a classification name.")
+      .customSanitizer((value) =>
+        value
+          .split(" ")
+          .map(
+            (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+          )
+          .join(" ")
+      )
       .bail() // on error this message is sent.
       .isLength({ min: 2 })
       .withMessage("Classification name must be at least 2 characters.")
       .bail()
-      .matches(/^[A-Za-z]+$/)
+      .matches(/^[A-Za-z\s-]+$/)
       .withMessage("Provide a correct classification name."),
   ];
 };
@@ -58,11 +66,19 @@ validate.newInventoryRules = () => {
       .escape()
       .notEmpty()
       .withMessage("Please provide a make.")
+      .customSanitizer((value) =>
+        value
+          .split(" ")
+          .map(
+            (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+          )
+          .join(" ")
+      )
       .bail() // on error this message is sent.
       .isLength({ min: 2 })
       .withMessage("Make must be at least 2 characters.")
       .bail()
-      .matches(/^[A-Za-z]+$/)
+      .matches(/^[A-Za-z0-9\s-]+$/)
       .withMessage("Provide a correct make."),
     // inv_model is required and must be alphabetic characters only
     body("inv_model")
@@ -70,11 +86,19 @@ validate.newInventoryRules = () => {
       .escape()
       .notEmpty()
       .withMessage("Please provide a model.")
+      .customSanitizer((value) =>
+        value
+          .split(" ")
+          .map(
+            (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+          )
+          .join(" ")
+      )
       .bail() // on error this message is sent.
       .isLength({ min: 2 })
       .withMessage("Model must be at least 2 characters.")
       .bail()
-      .matches(/^[A-Za-z]+$/)
+      .matches(/^[A-Za-z0-9\s-]+$/)
       .withMessage("Provide a correct model."),
     // price must be non-negative
     body("inv_price")
