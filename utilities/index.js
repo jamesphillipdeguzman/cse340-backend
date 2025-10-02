@@ -311,7 +311,7 @@ Util.buildAddInventory = async function (req, res, next) {
   addInventory += '<label for="inv_color">Color</label>';
   addInventory +=
     '<input type="text" class="form-control" id="inv_color" name="inv_color" placeholder="Enter color (e.g., red)" ' +
-    'required title="Color" pattern="^[A-Za-z ]+$" minlength="2" ' +
+    'required pattern="^[A-Za-z ]+$" minlength="2" ' +
     'title= "Color must be alphabetic characters only." value="' +
     (res.locals.inv_color ? res.locals.inv_color : "") +
     '">';
