@@ -206,7 +206,7 @@ Util.buildAddClassification = async function (req, res, next) {
     '<label for="classification_name">Classification Name</label>';
 
   addClassification +=
-    '<input type="text" class="form-control" id="classification_name" name="classification_name" placeholder="Enter classification name" required pattern="^[A-Za-z]+$" title="Classification name must be alphabetic characters only." value="' +
+    '<input type="text" class="form-control" id="classification_name" name="classification_name" placeholder="Enter classification name" required pattern="^[A-Za-z0-9s-]+$" title="Classification name must be alphabetic characters only." value="' +
     (res.locals.classification_name ? res.locals.classification_name : "") +
     '">';
   addClassification +=
@@ -256,7 +256,7 @@ Util.buildAddInventory = async function (req, res, next) {
   addInventory += '<label for="inv_make">Make</label>';
   addInventory +=
     '<input type="text" class="form-control" id="inv_make" name="inv_make" placeholder="Min of 2 characters" ' +
-    'required pattern="^[A-Za-z ]+$" minlength="2" ' +
+    'required pattern="^[A-Za-z0-9s-]+$" minlength="2" ' +
     'title= "Make" value="' +
     (res.locals.inv_make ? res.locals.inv_make : "") +
     '">';
@@ -264,7 +264,7 @@ Util.buildAddInventory = async function (req, res, next) {
   addInventory += '<label for="inv_model">Model</label>';
   addInventory +=
     '<input type="text" class="form-control" id="inv_model" name="inv_model" placeholder="Min of 2 characters" ' +
-    'required pattern="^[A-Za-z ]+$" minlength="2" ' +
+    'required pattern="^[A-Za-z0-9s-]+$" minlength="2" ' +
     'title= "Model" value="' +
     (res.locals.inv_model ? res.locals.inv_model : "") +
     '">';
