@@ -2,6 +2,9 @@ const utilities = require("../utilities/");
 const accountController = {};
 const accountModel = require("../models/account-model");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
+
 /**
  * Build the Login view
  */
@@ -52,7 +55,15 @@ accountController.registerAccount = async function (req, res) {
   let hashedPassword;
   try {
     // regular password and cost (salt is generated automatically)
-    hashedPassword = bcrypt.hashSync(account_password, 10);
+    const trimmedPassword = account_password.trim();
+    hashedPassword = bcrypt.hashSync(trimmedPassword, 10);
+
+    console.log("Raw password:", `"${account_password}"`);
+    console.log("Hashed password stored:", hashedPassword);
+    console.log(
+      "Password chars:",
+      [...account_password].map((c) => c.charCodeAt(0))
+    );
   } catch (error) {
     req.flash(
       "notice",
@@ -112,41 +123,79 @@ accountController.registerAccount = async function (req, res) {
   }
 };
 
-// Process Login request
+/* ****************************************
+ *  Process login request
+ * ************************************ */
+accountController.accountLogin = async function (req, res) {
+  let nav = await utilities.getNav();
+  const { account_email, account_password } = req.body;
+  const accountData = await accountModel.getAccountByEmail(account_email);
 
-accountController.loginAccount = async function (req, res) {
-  try {
-    const { account_email, account_password } = req.body;
+  console.log("Fetched accountData:", accountData);
+  console.log("Entered password:", account_password);
+  console.log(
+    "Password chars:",
+    [...account_password].map((c) => c.charCodeAt(0))
+  );
 
-    console.log("Login attempt body:", req.body);
+  const trimmedPassword = account_password.trim();
 
-    if (!account_email || !account_password) {
-      return res.status(400).send("Email and password are required.");
-    }
+  // DEBUG: quick sync check with trimmed password
+  if (bcrypt.compareSync(trimmedPassword, accountData.account_password)) {
+    console.log("Password match!");
+  } else {
+    console.log("Password mismatch!");
+  }
 
-    const account = await accountModel.checkAccount(
+  if (!accountData) {
+    req.flash("notice", "Please check your credentials and try again.");
+    res.status(400).render("account/login", {
+      title: "Login",
+      nav,
+      errors: null,
       account_email,
-      account_password
+    });
+    return;
+  }
+  try {
+    console.log(
+      "Password type:",
+      typeof account_password,
+      "length:",
+      account_password.length
+    );
+    console.log(
+      "Hashed type:",
+      typeof accountData.account_password,
+      "length:",
+      accountData.account_password.length
     );
 
-    if (!account) {
-      console.log("Authentication failed for:", account_email);
-    }
+    const trimmedPassword = account_password.trim();
 
-    let nav = await utilities.getNav();
-
-    if (account) {
-      console.log("Account found:", account);
-      req.session.account = account;
-      // Successful login
-      console.log("Login successful for:", account.account_email); // Here?
-      return res.redirect("/");
+    if (await bcrypt.compare(trimmedPassword, accountData.account_password)) {
+      delete accountData.account_password;
+      const accessToken = jwt.sign(
+        accountData,
+        process.env.ACCESS_TOKEN_SECRET,
+        { expiresIn: 3600 * 1000 }
+      );
+      if (process.env.NODE_ENV === "development") {
+        res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 });
+      } else {
+        res.cookie("jwt", accessToken, {
+          httpOnly: true,
+          secure: true,
+          maxAge: 3600 * 1000,
+        });
+      }
+      return res.redirect("/account/");
     } else {
-      // Failed login
-      console.log("Account not found:", account);
-      console.log("Login failed for:", account_email);
-      req.flash("notice", "Please check your credentials and try again.");
-      res.status(401).render("account/login", {
+      req.flash(
+        "message notice",
+        "Please check your credentials and try again."
+      );
+      res.status(400).render("account/login", {
         title: "Login",
         nav,
         errors: null,
@@ -154,16 +203,22 @@ accountController.loginAccount = async function (req, res) {
       });
     }
   } catch (error) {
-    console.error("Login error:", error);
-    let nav = await utilities.getNav();
-    req.flash("notice", "An error occurred during login. Try again.");
-    res.status(500).render("account/login", {
-      title: "Login",
-      nav,
-      errors: null,
-      account_email: req.body?.account_email || "",
-    });
+    throw new Error("Access Forbidden");
   }
+};
+
+/* ****************************************
+ *  Build the Account Management View
+ * ************************************ */
+
+accountController.buildAccountManagement = async function (req, res) {
+  let nav = await utilities.getNav();
+  res.render("account/management", {
+    title: "Account Management",
+    nav,
+    errors: null,
+    messages: req.flash(),
+  });
 };
 
 module.exports = accountController;

@@ -19,7 +19,7 @@ router.post(
   "/login",
   validate.loginRules(),
   validate.checkLoginData,
-  utilities.handleErrors(accountController.loginAccount)
+  utilities.handleErrors(accountController.accountLogin)
 );
 
 // Handle new classification form submission
@@ -36,6 +36,11 @@ router.post(
   validate.registrationRules(),
   validate.checkRegData,
   utilities.handleErrors(accountController.registerAccount)
+);
+
+router.get(
+  "/",
+  utilities.handleErrors(accountController.buildAccountManagement)
 );
 
 // Process the login attempt
