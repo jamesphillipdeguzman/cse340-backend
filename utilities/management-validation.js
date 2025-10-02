@@ -114,20 +114,14 @@ validate.newInventoryRules = () => {
       .trim()
       .escape()
       .notEmpty()
-      .withMessage("Please provide an image.")
-      .bail() // on error this message is sent.
-      .matches(/^\/images\/vehicles\/.+\.(jpg|png|jpeg)$/i)
-      .withMessage("Use path format: /images/vehicles/vehiclename.jpg"),
+      .withMessage("Please provide an image."),
 
     // inv_thumbnail is required
     body("inv_thumbnail")
       .trim()
       .escape()
       .notEmpty()
-      .withMessage("Please provide a thumbnail.")
-      .bail() // on error this message is sent.
-      .matches(/^\/images\/vehicles\/.+\.(jpg|png|jpeg)$/i)
-      .withMessage("Use thumbnail format: /images/vehicles/vehiclename.jpg"),
+      .withMessage("Please provide a thumbnail."),
 
     // price must be non-negative
     body("inv_price")
