@@ -54,9 +54,8 @@ accountController.registerAccount = async function (req, res) {
   // Hash the password before storing
   let hashedPassword;
   try {
-    // regular password and cost (salt is generated automatically)
-    const trimmedPassword = account_password.trim();
-    hashedPassword = bcrypt.hashSync(trimmedPassword, 10);
+    // Password is already trimmed by validation middleware
+    hashedPassword = bcrypt.hashSync(account_password, 10);
 
     console.log("Raw password:", `"${account_password}"`);
     console.log("Hashed password stored:", hashedPassword);
@@ -138,15 +137,6 @@ accountController.accountLogin = async function (req, res) {
     [...account_password].map((c) => c.charCodeAt(0))
   );
 
-  const trimmedPassword = account_password.trim();
-
-  // DEBUG: quick sync check with trimmed password
-  if (bcrypt.compareSync(trimmedPassword, accountData.account_password)) {
-    console.log("Password match!");
-  } else {
-    console.log("Password mismatch!");
-  }
-
   if (!accountData) {
     req.flash("notice", "Please check your credentials and try again.");
     res.status(400).render("account/login", {
@@ -156,6 +146,14 @@ accountController.accountLogin = async function (req, res) {
       account_email,
     });
     return;
+  }
+
+  // Password is already trimmed by validation middleware
+  // DEBUG: quick sync check with password
+  if (bcrypt.compareSync(account_password, accountData.account_password)) {
+    console.log("Password match!");
+  } else {
+    console.log("Password mismatch!");
   }
   try {
     console.log(
@@ -171,9 +169,8 @@ accountController.accountLogin = async function (req, res) {
       accountData.account_password.length
     );
 
-    const trimmedPassword = account_password.trim();
-
-    if (await bcrypt.compare(trimmedPassword, accountData.account_password)) {
+    // Password is already trimmed by validation middleware
+    if (await bcrypt.compare(account_password, accountData.account_password)) {
       delete accountData.account_password;
       const accessToken = jwt.sign(
         accountData,

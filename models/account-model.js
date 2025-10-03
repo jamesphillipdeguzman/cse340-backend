@@ -28,9 +28,7 @@ async function registerAccount(
       throw new Error("Email already registered.");
     }
 
-    // Hash the password before storing
-    const hashedPassword = await bcrypt.hash(account_password, 10);
-
+    // Password is already hashed in the controller
     const sql = `INSERT INTO public.account 
         (
         account_firstname, 
@@ -43,7 +41,7 @@ async function registerAccount(
       account_firstname,
       account_lastname,
       account_email,
-      hashedPassword,
+      account_password, // This is already hashed from the controller
     ]);
 
     return result.rows[0];

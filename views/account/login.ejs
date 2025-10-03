@@ -27,7 +27,8 @@
 
                                 <label for="account_password">Password</label>
                                 <input type="password" class="form-control" id="account_password"
-                                    name="account_password" placeholder="Password" required>
+                                    name="account_password" placeholder="Password" required
+                                    pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$">
                                 <small>Password must be at least 12 characters and contain at least 1 uppercase letter,
                                     1 number, and 1 special character</small>
                             </div>
