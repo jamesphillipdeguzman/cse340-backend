@@ -10,16 +10,16 @@ invCont.buildByClassification = async function (req, res, next) {
   const data = await invModel.getInventoryByClassificationId(classification_id);
   console.log(data);
 
-  if (!data.rows || data.rows.length === 0) {
+  if (!data || data.length === 0) {
     let err = new Error("No vehicles found for the selected classification.");
     err.status = 404;
     return next(err);
   }
 
-  const grid = await utilities.buildClassificationList(data.rows);
+  const grid = await utilities.buildClassificationGrid(data);
   console.log(grid);
   let nav = await utilities.getNav();
-  const className = data.rows[0].classification_name;
+  const className = data[0].classification_name;
   res.render("inventory/classification", {
     title: className + " vehicles",
     nav,
@@ -31,20 +31,21 @@ invCont.buildByClassification = async function (req, res, next) {
  * Build the vehicle detail view
  * ************************ */
 invCont.buildByInvID = async function (req, res, next) {
-  const inv_id = req.params.invId;
+  const inv_id = parseInt(req.params.invId, 10); // ensure it's a number
+  console.log("Requested inv_id:", inv_id);
   const data = await invModel.getInvItemByID(inv_id);
-  console.log(data);
+  console.log("Query result:", data);
 
-  if (!data.rows || data.rows.length === 0) {
+  if (!data || data.length === 0 || !data[0]) {
     let err = new Error("Vehicle not found.");
     err.status = 404;
     return next(err);
   }
 
-  const detail = await utilities.buildVehicleDetail(data.rows);
+  const detail = await utilities.buildVehicleDetail(data);
   console.log(detail);
   let nav = await utilities.getNav();
-  const item = data.rows[0];
+  const item = data[0];
   res.render("inventory/detail", {
     title: item.inv_year + " " + item.inv_make + " " + item.inv_model,
     nav,
@@ -250,7 +251,7 @@ invCont.getInventoryJSON = async (req, res, next) => {
   const invData = await invModel.getInventoryByClassificationId(
     classification_id
   );
-  if (invData[0].inv_id) {
+  if (invData && invData.length > 0) {
     return res.json(invData);
   } else {
     next(new Error("No data returned"));
