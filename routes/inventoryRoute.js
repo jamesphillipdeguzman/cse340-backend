@@ -48,6 +48,11 @@ router.post(
   utilities.handleErrors(invController.addInventory)
 );
 
+router.get(
+  "/getInventory/:classification_id",
+  utilities.handleErrors(invController.getInventoryJSON)
+);
+
 /**
  * Deliberately cause a server error for testing purposes.
  *

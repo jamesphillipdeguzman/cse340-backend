@@ -13,18 +13,46 @@ async function getClassifications() {
  * Get all inventory items and classification name by classification id
  */
 
+// async function getInventoryByClassificationId(classification_id) {
+//   try {
+//     const data = await pool.query(
+//       `
+//             SELECT * FROM public.inventory AS i
+//             JOIN public.classification AS c
+//             ON i.classification_id = c.classification_id
+//             WHERE i.classification_id = $1
+//             `,
+//       [classification_id]
+//     );
+//     return data;
+//   } catch (error) {
+//     console.error("getInventoryByClassificationId error " + error);
+//   }
+// }
 async function getInventoryByClassificationId(classification_id) {
   try {
-    const data = await pool.query(
+    const result = await pool.query(
       `
-            SELECT * FROM public.inventory AS i
-            JOIN public.classification AS c
-            ON i.classification_id = c.classification_id
-            WHERE i.classification_id = $1       
-            `,
+      SELECT 
+        i.inv_id AS inv_id,
+        i.inv_make AS inv_make,
+        i.inv_model AS inv_model,
+        i.inv_year AS inv_year,
+        i.inv_price AS inv_price,
+        i.inv_miles AS inv_miles,
+        i.inv_color AS inv_color,
+        i.inv_image AS inv_image,
+        i.inv_thumbnail AS inv_thumbnail,
+        i.inv_description AS inv_description,
+        c.classification_name AS classification_name
+      FROM public.inventory AS i
+      JOIN public.classification AS c
+        ON i.classification_id = c.classification_id
+      WHERE i.classification_id = $1
+      `,
       [classification_id]
     );
-    return data;
+    return result.rows;
   } catch (error) {
     console.error("getInventoryByClassificationId error " + error);
   }

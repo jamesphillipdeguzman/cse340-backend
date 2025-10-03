@@ -1,5 +1,7 @@
 const invModel = require("../models/inventory-model");
 const Util = {};
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 /* ************************
  * Constructs the nav HTML unordered list
@@ -27,6 +29,7 @@ Util.getNav = async function (req, res, next) {
 /* ************************
  * Constructs an HTML grid of vehicle data to be provided to the inventory view
  ************************** */
+// used to be buildClassificationGrid
 Util.buildClassificationGrid = async function (data) {
   let grid;
   if (data.length > 0) {
@@ -123,69 +126,6 @@ Util.buildVehicleDetail = async function (data) {
   }
   return detail;
 };
-
-/***********************************
- * Build the login form
- ********************************** */
-
-// Util.buildLoginForm = async function (req, res, next) {
-//   let login = "";
-//   login += '<div class="form-wrapper">';
-//   login += '<form class="login" method="POST" action="/account/login">';
-//   login += "<h2>Account Login</h2>";
-//   login += '<div class="form-group">';
-//   login += '<label for="account_email">Email address</label>';
-//   login +=
-//     '<input type="email" class="form-control" id="account_email" name="account_email" placeholder="Enter email" required pattern="^(?=.*d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*s).{12,}$" title="Email must be a valid email address">';
-//   login += "</div>";
-//   login += '<div class="form-group">';
-//   login += '<label for="account_password">Password</label>';
-//   login +=
-//     '<input type="password" class="form-control" id="account_password" name="account_password" placeholder="Password" required>';
-//   login +=
-//     "<small>Password must be at least 12 characters and contain at least 1 uppercase letter, 1 number, and 1 special character</small>";
-//   login += "</div>";
-//   login += '<button type="submit" class="btn-submit">Login</button>';
-//   login +=
-//     '<p class="noaccount">No account? <a href="/account/register" id="register">Sign-up</a></p>';
-//   login += "</form>";
-//   login += "</div>";
-//   return login;
-// };
-
-/***********************************
- * Build the registration form
- ********************************** */
-
-// Util.buildRegisterForm = async function (req, res, next) {
-//   let register = "";
-//   register += '<div class="form-wrapper">';
-//   register +=
-//     '<form class="signmeup" method="POST" action="/account/register">';
-//   register += "<h2>Account Registration</h2>";
-//   register += '<div class="form-group">';
-//   register += '<label for="account_firstname">First Name</label>';
-//   register +=
-//     '<input type="text" class="form-control" id="account_firstname" name="account_firstname" placeholder="Enter first name" required value="<%= locals.account_firstname %>">';
-//   register += '<label for="account_lastname">Last Name</label>';
-//   register +=
-//     '<input type="text" class="form-control" id="account_lastname" name="account_lastname" placeholder="Enter last name" required value="<%= locals.account_lastname %>">';
-//   register += '<label for="account_email">Email address</label>';
-//   register +=
-//     '<input type="email" class="form-control" id="account_email" name ="account_email" placeholder="Enter email" required value="<%= locals.account_email %>">';
-//   register += '<label for="account_password">Password</label>';
-//   register +=
-//     '<input type="password" class="form-control" id="account_password" name="account_password" placeholder="password" required pattern="^(?=.*d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*s).{12,}$" title="Password must be at least 12 characters and contain at least 1 uppercase letter, 1 number, and 1 special character">';
-//   register +=
-//     '<button type="btn-password" class="btn-password">Show Password</button>';
-//   register +=
-//     "<small>Password must be at least 12 characters and contain at least 1 uppercase letter, 1 number, and 1 special character</small>";
-//   register += "</div>";
-//   register += '<button type="submit" class="btn-submit">Register</button>';
-//   register += "</form>";
-//   register += "</div>";
-//   return register;
-// };
 
 /**
  * ****************************************
@@ -325,6 +265,23 @@ Util.buildAddInventory = async function (req, res, next) {
   return addInventory;
 };
 
+/**
+ * ****************************************
+ * Build the Classification List
+ * ****************************************
+ */
+
+Util.buildClassificationList = async function () {
+  const data = await invModel.getClassifications(); // fetch classifications
+  let list = '<select name="classification_id" id="classificationList">';
+  list += '<option value="">-- Select Classification -- </option>';
+  data.rows.forEach((row) => {
+    list += `<option value="${row.classification_id}">${row.classification_name}</option>`;
+  });
+  list += "</select>";
+  return list;
+};
+
 /* ****************************************
  * Middleware For Handling Errors
  * Wrap other function in this for
@@ -332,5 +289,41 @@ Util.buildAddInventory = async function (req, res, next) {
  **************************************** */
 Util.handleErrors = (fn) => (req, res, next) =>
   Promise.resolve(fn(req, res, next)).catch(next);
+
+/* ****************************************
+ * Middleware to check token validity
+ **************************************** */
+Util.checkJWTToken = (req, res, next) => {
+  if (req.cookies.jwt) {
+    jwt.verify(
+      req.cookies.jwt,
+      process.env.ACCESS_TOKEN_SECRET,
+      function (err, accountData) {
+        if (err) {
+          req.flash("Please log in");
+          res.clearCookie("jwt");
+          return res.redirect("/account/login");
+        }
+        res.locals.accountData = accountData;
+        res.locals.loggedin = 1;
+        next();
+      }
+    );
+  } else {
+    next();
+  }
+};
+
+/* ****************************************
+ *  Check Login
+ * ************************************ */
+Util.checkLogin = (req, res, next) => {
+  if (res.locals.loggedin) {
+    next();
+  } else {
+    req.flash("notice", "Please log in.");
+    return res.redirect("/account/login");
+  }
+};
 
 module.exports = Util;

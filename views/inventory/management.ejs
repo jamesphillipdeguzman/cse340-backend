@@ -2,7 +2,7 @@
     <h1>
         <%= title %>
     </h1>
-    <% } else { res.redirect("/") } %>
+    <% } %>
 
         <%- messages() %>
 
@@ -11,3 +11,15 @@
                 </li>
                 <li><a href="/inv/add-inventory" title="Add New Vehicle">Add New Vehicle</a></li>
             </ul>
+
+            <h2>Manage Inventory</h2>
+            <p>Choose a classification to see those inventory items.</p>
+
+            <div id="classificationContainer">
+                <%- classificationSelect %>
+            </div>
+
+            <table id="inventoryDisplay"></table>
+            <noscript>Javascript must be enabled to use this page.</noscript>
+
+            <script src="/js/inventory.js"></script>

@@ -10,6 +10,7 @@ const expressLayouts = require("express-ejs-layouts");
 const env = require("dotenv").config();
 const app = express();
 const static = require("./routes/static");
+const path = require("path");
 const baseController = require("./controllers/baseController.js");
 const accountController = require("./controllers/accountController.js");
 const inventoryRoute = require("./routes/inventoryRoute.js");
@@ -49,6 +50,8 @@ app.use(function (req, res, next) {
   next();
 });
 
+app.use(utilities.checkJWTToken);
+
 /* ***********************
  * View Engine and Templates
  *************************/
@@ -62,7 +65,9 @@ app.set("layout", "./layouts/layout");
 /* ***********************
  * Routes
  *************************/
-app.use(static);
+// Serve static files from "public" folder
+app.use(express.static(path.join(__dirname, "public")));
+// app.use(static);
 
 // Index Route: Serve up the index.ejs template from Views and pass in the data object title as "Home"
 // app.get("/", (req, res) => {

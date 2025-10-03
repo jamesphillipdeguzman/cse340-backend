@@ -177,6 +177,10 @@ accountController.accountLogin = async function (req, res) {
         process.env.ACCESS_TOKEN_SECRET,
         { expiresIn: 3600 * 1000 }
       );
+
+      // STORE first name in session
+      req.session.account_firstname = accountData.account_firstname;
+
       if (process.env.NODE_ENV === "development") {
         res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 });
       } else {
@@ -209,13 +213,21 @@ accountController.accountLogin = async function (req, res) {
  * ************************************ */
 
 accountController.buildAccountManagement = async function (req, res) {
-  let nav = await utilities.getNav();
-  res.render("account/management", {
-    title: "Account Management",
-    nav,
-    errors: null,
-    messages: req.flash(),
-  });
+  try {
+    let nav = await utilities.getNav();
+    const classificationSelect = await utilities.buildClassificationList();
+    res.render("account/management", {
+      title: "Account Management",
+      nav,
+      errors: null,
+      messages: req.flash(),
+      account_firstname: req.session.account_firstname,
+      classificationSelect,
+    });
+  } catch (error) {
+    console.error("Error building account management view", error);
+    res.status(500).send("Server error");
+  }
 };
 
 module.exports = accountController;
