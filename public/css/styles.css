@@ -1023,10 +1023,7 @@ small {
     margin: 0 auto;
   }
 
-  main {
-    width: 90%;
-    max-width: 90vw;
-  }
+ 
 
   main h1 {
     font-size: 1.1rem;
