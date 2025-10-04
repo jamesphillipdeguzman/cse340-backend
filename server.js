@@ -37,6 +37,12 @@ app.use(
   })
 );
 
+// Make account_firstname available to all EJS templates
+app.use((req, res, next) => {
+  res.locals.account_firstname = req.session.account_firstname || null;
+  next();
+});
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 

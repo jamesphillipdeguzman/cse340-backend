@@ -209,6 +209,28 @@ accountController.accountLogin = async function (req, res) {
 };
 
 /* ****************************************
+ *  Process Logout Request
+ * ************************************ */
+accountController.logout = async function (req, res) {
+  try {
+    // Flash before destroying session
+    req.flash("notice", "You've been logged out successfully.");
+    // Destroy session
+    req.session.destroy((err) => {
+      if (err) {
+        console.error("Error destroying session", err);
+      }
+      // Clear JWT cookie
+      res.clearCookie("jwt");
+      res.redirect("/"); // redirect to home or login page
+    });
+  } catch (error) {
+    console.error("Logout error", error);
+    res.redirect("/");
+  }
+};
+
+/* ****************************************
  *  Build the Account Management View
  * ************************************ */
 
@@ -221,7 +243,7 @@ accountController.buildAccountManagement = async function (req, res) {
       nav,
       errors: null,
       messages: req.flash(),
-      account_firstname: req.session.account_firstname,
+      // account_firstname: req.session.account_firstname, -- no need to pass account_firstname here since it is globally available now from server.js
       classificationSelect,
     });
   } catch (error) {

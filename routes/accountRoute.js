@@ -22,13 +22,7 @@ router.post(
   utilities.handleErrors(accountController.accountLogin)
 );
 
-// Handle new classification form submission
-// router.post(
-//   "/addClassification",
-//   validate.newClassificationRules(),
-//   validate.checkNewClassificationData,
-//   utilities.handleErrors(invController.addClassification)
-// );
+router.get("/logout", utilities.handleErrors(accountController.logout));
 
 // Handle registration form submission
 router.post(
