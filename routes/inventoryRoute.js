@@ -48,9 +48,18 @@ router.post(
   utilities.handleErrors(invController.addInventory)
 );
 
+// Route to get inventory by classification ID
+
 router.get(
   "/getInventory/:classification_id",
   utilities.handleErrors(invController.getInventoryJSON)
+);
+
+// Route to update/edit inventory item by inv ID
+
+router.get(
+  "/edit/:inv_id",
+  utilities.handleErrors(invController.editInventoryView)
 );
 
 /**

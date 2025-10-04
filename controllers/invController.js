@@ -33,7 +33,7 @@ invCont.buildByClassification = async function (req, res, next) {
 invCont.buildByInvID = async function (req, res, next) {
   const inv_id = parseInt(req.params.invId, 10); // ensure it's a number
   console.log("Requested inv_id:", inv_id);
-  const data = await invModel.getInvItemByID(inv_id);
+  const data = await invModel.getInventoryById(inv_id);
   console.log("Query result:", data);
 
   if (!data || data.length === 0 || !data[0]) {
@@ -59,7 +59,7 @@ invCont.buildByInvID = async function (req, res, next) {
  */
 invCont.buildManagement = async function (req, res, next) {
   let nav = await utilities.getNav();
-  const classificationSelect = await utilities.buildClassificationList(); // used to be buildClassificationGrid
+  const classificationSelect = await utilities.buildClassificationList();
   res.render("inventory/management", {
     title: "Vehicle Management",
     nav,
@@ -255,6 +255,71 @@ invCont.getInventoryJSON = async (req, res, next) => {
     return res.json(invData);
   } else {
     next(new Error("No data returned"));
+  }
+};
+
+/**
+ * Edit Inventory View
+ */
+
+invCont.editInventoryView = async function (req, res, next) {
+  try {
+    const inv_id = parseInt(req.params.inv_id);
+    if (isNaN(inv_id)) {
+      req.flash("warnings", "Invalid inventory ID.");
+      return res.redirect("/inv");
+    }
+
+    let nav = await utilities.getNav();
+    const itemData = await invModel.getInventoryById(inv_id);
+    if (!itemData || itemData.length === 0) {
+      req.flash("notice", "Sorry, we could not find that inventory item.");
+      return res.redirect("/inv");
+    }
+
+    const item = itemData[0]; // Get first item from array
+
+    // Build the dropdown and selected classification here..
+    const classificationSelect = await utilities.buildClassificationList(
+      item.classification_id
+    );
+
+    // Set res.locals with the inventory data for the form
+    res.locals.inv_id = item.inv_id;
+    res.locals.inv_make = item.inv_make;
+    res.locals.inv_model = item.inv_model;
+    res.locals.inv_year = item.inv_year;
+    res.locals.inv_description = item.inv_description;
+    res.locals.inv_image = item.inv_image;
+    res.locals.inv_thumbnail = item.inv_thumbnail;
+    res.locals.inv_price = item.inv_price;
+    res.locals.inv_miles = item.inv_miles;
+    res.locals.inv_color = item.inv_color;
+    res.locals.classification_id = item.classification_id;
+
+    const formHTML = await utilities.buildEditInventory(req, res);
+    const itemName = `${item.inv_make} ${item.inv_model}`;
+    res.render("inventory/editInventory", {
+      title: "Edit " + itemName,
+      nav,
+      classificationSelect: classificationSelect,
+      errors: null,
+      inv_id: item.inv_id,
+      inv_make: item.inv_make,
+      inv_model: item.inv_model,
+      inv_year: item.inv_year,
+      inv_description: item.inv_description,
+      inv_image: item.inv_image,
+      inv_thumbnail: item.inv_thumbnail,
+      inv_price: item.inv_price,
+      inv_miles: item.inv_miles,
+      inv_color: item.inv_color,
+      classification_id: item.classification_id,
+      editInventory: formHTML,
+    });
+  } catch (error) {
+    console.error("Failed to build inventory view", error);
+    next(error);
   }
 };
 

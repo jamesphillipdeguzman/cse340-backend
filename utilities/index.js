@@ -267,16 +267,124 @@ Util.buildAddInventory = async function (req, res, next) {
 
 /**
  * ****************************************
+ * Build the Edit Inventory View
+ * ****************************************
+ */
+
+Util.buildEditInventory = async function (req, res, next) {
+  let editInventory = "";
+  editInventory += '<div class="form-wrapper">';
+  editInventory +=
+    '<form class="update-inventory" method="POST" action="/inv/edit">';
+  editInventory += "<h2>Edit Inventory</h2>";
+  editInventory += '<div class="form-group">';
+  editInventory += "<hr />";
+  editInventory += `<input type="hidden" id="inv_id" name="inv_id" value="${res.locals.inv_id || ''}">`;
+  // editInventory += '<p class="warnings">All fields are required.</p>';
+
+  // Replace text input with dropdown for classifications
+  editInventory += '<label for="classification_id">Classification</label>';
+  editInventory +=
+    '<select id="classification_id" name="classification_id" required title="Classification">';
+  editInventory += '<option value="">-- Select Classification --</option>';
+
+  // Fetch classifications from DB
+  const data = await invModel.getClassifications();
+
+  data.rows.forEach((row) => {
+    const selected =
+      res.locals.classification_id == row.classification_id ? "selected" : "";
+    editInventory += `<option value="${row.classification_id}" ${selected}>${row.classification_name}</option>`;
+  });
+  editInventory += "</select>";
+
+  // Add the rest of the inventory fields here...
+  // Make
+  editInventory += '<label for="inv_make">Make</label>';
+  editInventory +=
+    '<input type="text" class="form-control" id="inv_make" name="inv_make" placeholder="Min of 2 characters" ' +
+    'required pattern="^[A-Za-z0-9s-]+$" minlength="2" ' +
+    'title= "Make" value="' +
+    (res.locals.inv_make ? res.locals.inv_make : "") +
+    '">';
+  // Model
+  editInventory += '<label for="inv_model">Model</label>';
+  editInventory +=
+    '<input type="text" class="form-control" id="inv_model" name="inv_model" placeholder="Min of 2 characters" ' +
+    'required pattern="^[A-Za-z0-9s-]+$" minlength="2" ' +
+    'title= "Model" value="' +
+    (res.locals.inv_model ? res.locals.inv_model : "") +
+    '">';
+  // Description
+  editInventory += '<label for="inv_description">Description</label>';
+  editInventory +=
+    '<textarea id="inv_description" name="inv_description" ' +
+    'rows="4" cols="30" placeholder="Enter a description" ' +
+    'required title= "Description">' +
+    (res.locals.inv_description ? res.locals.inv_description : "") +
+    "</textarea>";
+  // Image Path
+  editInventory += '<label for="inv_image">Image Path</label>';
+  editInventory +=
+    '<input type="text" class="form-control" id="inv_image" name="inv_image" placeholder="/images/vehicles/no-image.png" required title="Image Path" value="' +
+    (res.locals.inv_image ? res.locals.inv_image : "") +
+    '">';
+  // Thumbnail Path
+  editInventory += '<label for="inv_thumbnail">Thumbnail Path</label>';
+  editInventory +=
+    '<input type="text" class="form-control" id="inv_thumbnail" name="inv_thumbnail" placeholder="/images/vehicles/no-image.png" required title="Thumbnail Path" value="' +
+    (res.locals.inv_thumbnail ? res.locals.inv_thumbnail : "") +
+    '">';
+  // Price
+  editInventory += '<label for="inv_price">Price</label>';
+  editInventory +=
+    '<input type="number" class="form-control" id="inv_price" name="inv_price" placeholder="Enter price (e.g., 99.99)" required title="Price" min="0" step="0.01" value="' +
+    (res.locals.inv_price ? res.locals.inv_price : "") +
+    '">';
+  // Year
+  editInventory += '<label for="inv_year">Year</label>';
+  editInventory +=
+    '<input type="number" class="form-control" id="inv_year" name="inv_year" placeholder="Enter year (e.g., 2025)" required title="Year" min="1900" max="2099" value="' +
+    (res.locals.inv_year ? res.locals.inv_year : "") +
+    '">';
+  // Miles
+  editInventory += '<label for="inv_miles">Miles</label>';
+  editInventory +=
+    '<input type="text" class="form-control" id="inv_miles" name="inv_miles" placeholder="Enter miles (e.g., 3000)" required ' +
+    'pattern="^\\d+$" ' +
+    'title="Miles" value="' +
+    (res.locals.inv_miles ? res.locals.inv_miles : "") +
+    '">';
+  // Color
+  editInventory += '<label for="inv_color">Color</label>';
+  editInventory +=
+    '<input type="text" class="form-control" id="inv_color" name="inv_color" placeholder="Enter color (e.g., red)" ' +
+    'required pattern="^[A-Za-z ]+$" minlength="2" ' +
+    'title= "Color must be alphabetic characters only." value="' +
+    (res.locals.inv_color ? res.locals.inv_color : "") +
+    '">';
+
+  editInventory += "</div>";
+  editInventory +=
+    '<button type="submit" class="btn-submit">Edit Vehicle</button>';
+  editInventory += "</form>";
+  editInventory += "</div>";
+  return editInventory;
+};
+
+/**
+ * ****************************************
  * Build the Classification List
  * ****************************************
  */
 
-Util.buildClassificationList = async function () {
+Util.buildClassificationList = async function (selectedId) {
   const data = await invModel.getClassifications(); // fetch classifications
   let list = '<select name="classification_id" id="classificationList">';
   list += '<option value="">-- Select Classification -- </option>';
   data.rows.forEach((row) => {
-    list += `<option value="${row.classification_id}">${row.classification_name}</option>`;
+    const selected = selectedId == row.classification_id ? "selected" : "";
+    list += `<option value="${row.classification_id}" ${selected}>${row.classification_name}</option>`;
   });
   list += "</select>";
   return list;
