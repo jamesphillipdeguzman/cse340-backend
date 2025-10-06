@@ -1,6 +1,7 @@
 const utilities = require("../utilities/");
 const inventoryModel = require("../models/inventory-model");
 const { body, validationResult } = require("express-validator");
+const { editInventoryView } = require("../controllers/invController");
 const validate = {};
 
 /********************************
@@ -216,6 +217,60 @@ validate.checkNewInventoryData = async (req, res, next) => {
       inv_miles: res.locals.inv_miles || "",
       inv_color: res.locals.inv_color || "",
       addInventory: formHTML,
+    });
+    return;
+  }
+
+  next();
+};
+
+/* ******************************
+ * Update data and return errors or continue to edit inventory
+ * ***************************** */
+validate.checkUpdateData = async (req, res, next) => {
+  const {
+    inv_make,
+    inv_model,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_year,
+    inv_miles,
+    inv_color,
+    inv_id,
+  } = req.body;
+  let errors = [];
+  errors = validationResult(req);
+  res.locals.inv_make = inv_make || "";
+  res.locals.inv_model = inv_model || "";
+  res.locals.inv_description = inv_description || "";
+  res.locals.inv_image = inv_image || "";
+  res.locals.inv_thumbnail = inv_thumbnail || "";
+  res.locals.inv_price = inv_price || "";
+  res.locals.inv_year = inv_year || "";
+  res.locals.inv_miles = inv_miles || "";
+  res.locals.inv_color = inv_color || "";
+  res.locals.inv_id = inv_id || "";
+  if (!errors.isEmpty()) {
+    let nav = await utilities.getNav();
+    // Generate the form HTML
+    const formHTML = await utilities.buildEditInventory(req, res);
+    res.render("inventory/editInventory", {
+      title: "Edit Inventory",
+      nav,
+      errors: errors.array(),
+      inv_make: res.locals.inv_make || "",
+      inv_model: res.locals.inv_model || "",
+      inv_description: res.locals.inv_description || "",
+      inv_image: res.locals.inv_image || "",
+      inv_thumbnail: res.locals.inv_thumbnail || "",
+      inv_price: res.locals.inv_price || "",
+      inv_year: res.locals.inv_year || "",
+      inv_miles: res.locals.inv_miles || "",
+      inv_color: res.locals.inv_color || "",
+      inv_id: res.locals.inv_id || "",
+      editInventory: formHTML,
     });
     return;
   }

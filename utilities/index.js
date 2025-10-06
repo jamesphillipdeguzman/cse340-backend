@@ -57,10 +57,14 @@ Util.buildClassificationGrid = async function (data) {
         '<a href="../../inv/detail/' +
         vehicle.inv_id +
         '" title="View ' +
+        vehicle.inv_year +
+        " " +
         vehicle.inv_make +
         " " +
         vehicle.inv_model +
         ' details">' +
+        vehicle.inv_year +
+        " " +
         vehicle.inv_make +
         " " +
         vehicle.inv_model +
@@ -275,7 +279,7 @@ Util.buildEditInventory = async function (req, res, next) {
   let editInventory = "";
   editInventory += '<div class="form-wrapper">';
   editInventory +=
-    '<form class="update-inventory" method="POST" action="/inv/edit">';
+    '<form class="update-inventory" method="POST" action="/inv/update">';
   editInventory += "<h2>Edit Inventory</h2>";
   editInventory += '<div class="form-group">';
   editInventory += "<hr />";

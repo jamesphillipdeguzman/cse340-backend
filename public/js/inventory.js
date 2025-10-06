@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
     data.forEach(function (element) {
       console.log("Element keys:", Object.keys(element), element);
       console.log(element.inv_id + ", " + element.inv_model);
-      dataTable += `<tr><td>${element.inv_make} ${element.inv_model}</td>`;
+      dataTable += `<tr><td>${element.inv_year} ${element.inv_make} ${element.inv_model}</td>`;
       dataTable += `<td><a href='/inv/edit/${element.inv_id}' title='Click to update'>Modify</a></td>`;
       dataTable += `<td><a href='/inv/delete/${element.inv_id}' title='Click to delete'>Delete</a></td></tr>`;
     });

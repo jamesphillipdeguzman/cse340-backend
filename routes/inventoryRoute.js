@@ -62,6 +62,13 @@ router.get(
   utilities.handleErrors(invController.editInventoryView)
 );
 
+
+router.post("/update/", 
+  validate.newInventoryRules(),
+  validate.checkUpdateData,
+  utilities.handleErrors(invController.updateInventory)
+);
+
 /**
  * Deliberately cause a server error for testing purposes.
  *
