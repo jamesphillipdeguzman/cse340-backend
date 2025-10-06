@@ -238,6 +238,7 @@ validate.checkUpdateData = async (req, res, next) => {
     inv_year,
     inv_miles,
     inv_color,
+    classification_id,
     inv_id,
   } = req.body;
   let errors = [];
@@ -251,6 +252,7 @@ validate.checkUpdateData = async (req, res, next) => {
   res.locals.inv_year = inv_year || "";
   res.locals.inv_miles = inv_miles || "";
   res.locals.inv_color = inv_color || "";
+  res.locals.classification_id = classification_id || "";
   res.locals.inv_id = inv_id || "";
   if (!errors.isEmpty()) {
     let nav = await utilities.getNav();
@@ -269,6 +271,7 @@ validate.checkUpdateData = async (req, res, next) => {
       inv_year: res.locals.inv_year || "",
       inv_miles: res.locals.inv_miles || "",
       inv_color: res.locals.inv_color || "",
+      classification_id: res.locals.classification_id || "",
       inv_id: res.locals.inv_id || "",
       editInventory: formHTML,
     });

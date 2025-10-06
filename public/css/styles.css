@@ -928,7 +928,10 @@ small {
     background-image: none;
   }
 
-
+  #top-header {
+    flex-direction: column;
+    gap: 2rem;
+  }
 
   #hero {
     height: auto;
