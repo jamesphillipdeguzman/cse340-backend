@@ -94,4 +94,21 @@ async function checkAccount(account_email, account_password) {
   }
 }
 
+/* *************************
+ *  Get account by email
+ * ************************* */
+async function getAccountByEmail(account_email) {
+  try {
+    const result = await pool.query(
+      "SELECT * FROM public.account WHERE account_email = $1",
+      [account_email]
+    );
+    return result.rows[0];
+  } catch (error) {
+    console.error("getAccountByEmail error:", error);
+    throw error;
+  }
+}
+
+
 module.exports = { registerAccount, checkExistingEmail, checkAccount };
