@@ -279,7 +279,7 @@ Util.buildEditInventory = async function (req, res, next) {
   let editInventory = "";
   editInventory += '<div class="form-wrapper">';
   editInventory +=
-    '<form class="update-inventory" method="POST" action="/inv/update">';
+    '<form class="update-inventory" id="updateForm" method="POST" action="/inv/update">';
   editInventory += "<h2>Edit Inventory</h2>";
   editInventory += '<div class="form-group">';
   editInventory += "<hr />";
@@ -370,7 +370,7 @@ Util.buildEditInventory = async function (req, res, next) {
 
   editInventory += "</div>";
   editInventory +=
-    '<button type="submit" class="btn-submit">Edit Vehicle</button>';
+    '<button disabled type="submit" class="btn-submit">Edit Vehicle</button>';
   editInventory += "</form>";
   editInventory += "</div>";
   return editInventory;

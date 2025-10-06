@@ -62,11 +62,21 @@ router.get(
   utilities.handleErrors(invController.editInventoryView)
 );
 
-
+// Handle update 
 router.post("/update/", 
   validate.newInventoryRules(),
   validate.checkUpdateData,
   utilities.handleErrors(invController.updateInventory)
+);
+
+// Route to build delete confirmation view
+router.get("/delete/:inv_id", 
+  utilities.handleErrors(invController.deleteConfirmationView)
+);
+
+// Handle delete
+router.post("/delete",
+  utilities.handleErrors(invController.deleteInventory)
 );
 
 /**

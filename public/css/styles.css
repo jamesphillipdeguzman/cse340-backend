@@ -727,6 +727,12 @@ textarea:focus {
   /* background-color: #f0f0f0; */
 }
 
+button:disabled {
+  background-color: #ddd;
+  color: #666;
+  cursor: not-allowed;
+}
+
 small {
   font-size: 0.7rem;
   color: #000;
