@@ -1,6 +1,7 @@
 const pool = require("../database/");
 const bcrypt = require("bcryptjs");
 
+
 /*******
  * Register a new account
  */
@@ -28,7 +29,7 @@ async function registerAccount(
       throw new Error("Email already registered.");
     }
 
-    // Password is already hashed in the controller
+
     const sql = `INSERT INTO public.account 
         (
         account_firstname, 
@@ -41,7 +42,7 @@ async function registerAccount(
       account_firstname,
       account_lastname,
       account_email,
-      account_password, // This is already hashed from the controller
+      account_password,
     ]);
 
     return result.rows[0];
@@ -64,19 +65,33 @@ async function checkExistingEmail(account_email) {
   }
 }
 
-/* *****************************
- * Return account data using email address
- * ***************************** */
-async function getAccountByEmail(account_email) {
+/* *************************
+ * Check Account
+ * *********************** */
+async function checkAccount(account_email, account_password) {
   try {
-    const result = await pool.query(
-      "SELECT account_id, account_firstname, account_lastname, account_email, account_type, account_password FROM account WHERE account_email = $1",
-      [account_email]
+    const sql = "SELECT * FROM public.account WHERE account_email = $1";
+    const result = await pool.query(sql, [account_email]);
+    const account = result.rows[0];
+    if (!account) {
+      console.log("No account found for", account_email);
+      return null;
+    }
+
+    console.log("Entered password:", account_password);
+    console.log("Stored hash", account.account_password);
+
+    const passwordMatch = await bcrypt.compare(
+      account_password,
+      account.account_password
     );
-    return result.rows[0];
+    console.log("Password match:", passwordMatch);
+    if (passwordMatch) return account;
+    return null;
   } catch (error) {
-    return new Error("No matching email found");
+    console.error("checkAccount error", error);
+    throw error;
   }
 }
 
-module.exports = { registerAccount, checkExistingEmail, getAccountByEmail };
+module.exports = { registerAccount, checkExistingEmail, checkAccount };
