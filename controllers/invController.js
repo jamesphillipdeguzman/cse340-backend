@@ -488,6 +488,93 @@ invCont.updateInventory = async function (req, res, next) {
     });
   }
 };
+/**
+ * Build Delete Confirmation View
+ */
+invCont.deleteConfirmationView = async function (req, res, next) {
+  try {
+    const inv_id = parseInt(req.params.inv_id, 10);
+    if (!inv_id) {
+      req.flash("notice", "Inventory ID not provided.");
+      return res.redirect("/inv");
+    }
+
+    const itemData = await invModel.getInventoryById(inv_id);
+    if (!itemData || itemData.length === 0) {
+      req.flash("notice", "Inventory item not found.");
+      return res.redirect("/inv");
+    }
+
+    const item = itemData[0];
+    const itemName = `${item.inv_year} ${item.inv_make} ${item.inv_model}`.trim();
+    let nav = await utilities.getNav();
+
+    // Set res.locals with inventory details for formHTML
+    res.locals.inv_id = item.inv_id;
+    res.locals.inv_make = item.inv_make;
+    res.locals.inv_model = item.inv_model;
+    res.locals.inv_year = item.inv_year;
+    res.locals.inv_price = item.inv_price;
+
+   
+    // Build formHTML for delete confirmation
+    const formHTML = await utilities.buildDeleteConfirmation(req, res);
+
+  res.render("inventory/deleteConfirm", {
+      title: "Delete " + itemName,
+      nav,
+      errors: null,
+      inv_id: item.inv_id,
+      inv_make: item.inv_make,
+      inv_model: item.inv_model,
+      inv_year: item.inv_year,
+      inv_price: item.inv_price,
+      itemName,
+      deleteConfirm: formHTML,
+    });
+  } catch (error) {
+    console.error("Error building delete confirmation view.", error);
+    next(error);
+  }
+};
+
+/**
+ * Delete Inventory Data
+ */
+invCont.deleteInventory = async function (req, res, next) {
+  try {
+    const inv_id = parseInt(req.body.inv_id, 10);
+    if (!inv_id) {
+      req.flash("notice", "Inventory ID not provided.");
+      return res.redirect("/inv");
+    }
+
+    const itemData = await invModel.getInventoryById(inv_id);
+    if (!itemData || itemData.length === 0) {
+      req.flash("notice", "Inventory item not found.");
+      return res.redirect("/inv");
+    }
+
+    const item = itemData[0];
+    const itemName = `${item.inv_year} ${item.inv_make} ${item.inv_model}`.trim();
+
+    const deleteResult = await invModel.deleteInventoryItem(inv_id);
+
+    if (deleteResult) {
+      req.flash("notice", `The ${itemName} was successfully deleted.`);
+    } else {
+      req.flash("notice", `Deleting ${itemName} failed.`);
+    }
+
+    return res.redirect("/inv");
+  } catch (error) {
+    console.error("Error deleting inventory: ", error);
+    req.flash("notice", "An error occurred while deleting the inventory item.");
+    return res.redirect("/inv");
+  }
+};
+
+
 
 /**
  * Deliberately cause a 500 server error for testing purposes.

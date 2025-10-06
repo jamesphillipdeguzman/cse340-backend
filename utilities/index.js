@@ -376,6 +376,79 @@ Util.buildEditInventory = async function (req, res, next) {
   return editInventory;
 };
 
+
+/**
+ * ****************************************
+ * Build the Delete Confirmation View
+ * ****************************************
+ */
+
+Util.buildDeleteConfirmation = async function (req, res, next) {
+  let deleteInventory = "";
+  deleteInventory += '<div class="form-wrapper">';
+  deleteInventory +=
+    '<form class="delete-inventory" id="deleteForm" method="POST" action="/inv/delete">';
+  deleteInventory += "<h2>Delete Inventory</h2>";
+  deleteInventory += '<div class="form-group">';
+  deleteInventory += "<hr />";
+  deleteInventory += `<input type="hidden" id="inv_id" name="inv_id" value="${res.locals.inv_id || ''}">`;
+  deleteInventory += '<p class="warnings">Confirm Deletion - The delete is permanent.</p>';
+
+  // Replace text input with dropdown for classifications
+  // deleteInventory += '<label for="classification_id">Classification</label>';
+  // deleteInventory +=
+  //   '<select id="classification_id" name="classification_id" required title="Classification">';
+  // deleteInventory += '<option value="">-- Select Classification --</option>';
+
+  // Fetch classifications from DB
+  // const data = await invModel.getClassifications();
+
+  // data.rows.forEach((row) => {
+  //   const selected =
+  //     res.locals.classification_id == row.classification_id ? "selected" : "";
+  //   deleteInventory += `<option value="${row.classification_id}" ${selected}>${row.classification_name}</option>`;
+  // });
+  // deleteInventory += "</select>";
+
+  // Add the rest of the inventory fields here...
+  // Make
+  deleteInventory += '<label for="inv_make">Make</label>';
+  deleteInventory +=
+    '<input readonly type="text" class="form-control" id="inv_make" name="inv_make" placeholder="Min of 2 characters" ' +
+    'required pattern="^[A-Za-z0-9s-]+$" minlength="2" ' +
+    'title= "Make" value="' +
+    (res.locals.inv_make ? res.locals.inv_make : "") +
+    '">';
+  // Model
+  deleteInventory += '<label for="inv_model">Model</label>';
+  deleteInventory +=
+    '<input readonly type="text" class="form-control" id="inv_model" name="inv_model" placeholder="Min of 2 characters" ' +
+    'required pattern="^[A-Za-z0-9s-]+$" minlength="2" ' +
+    'title= "Model" value="' +
+    (res.locals.inv_model ? res.locals.inv_model : "") +
+    '">';
+  
+  // Price
+  deleteInventory += '<label for="inv_price">Price</label>';
+  deleteInventory +=
+    '<input readonly type="number" class="form-control" id="inv_price" name="inv_price" placeholder="Enter price (e.g., 99.99)" required title="Price" min="0" step="0.01" value="' +
+    (res.locals.inv_price ? res.locals.inv_price : "") +
+    '">';
+  // Year
+  deleteInventory += '<label for="inv_year">Year</label>';
+  deleteInventory +=
+    '<input readonly type="number" class="form-control" id="inv_year" name="inv_year" placeholder="Enter year (e.g., 2025)" required title="Year" min="1900" max="2099" value="' +
+    (res.locals.inv_year ? res.locals.inv_year : "") +
+    '">';
+  
+  deleteInventory += "</div>";
+  deleteInventory +=
+    '<button type="submit" class="btn-submit">Delete Vehicle</button>';
+  deleteInventory += "</form>";
+  deleteInventory += "</div>";
+  return deleteInventory;
+};
+
 /**
  * ****************************************
  * Build the Classification List
