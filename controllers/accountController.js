@@ -44,7 +44,7 @@ accountController.buildEditAccount = async function (req, res) {
     res.render("account/update", {
       title: "Edit Account",
       nav,
-      errors: null,
+      errors: [],
       account_email,
       account_firstname,
       account_lastname,
@@ -266,6 +266,149 @@ accountController.accountLogin = async function (req, res) {
       nav,
       errors: null,
       account_email,
+    });
+  }
+};
+
+/* ****************************************
+ *  Process update account
+ * ************************************ */
+accountController.updateAccount = async function (req, res) {
+  const { account_id, account_firstname, account_lastname, account_email } =
+    req.body;
+  let nav = await utilities.getNav();
+
+  try {
+    const updateResult = await accountModel.updateAccount(
+      account_id,
+      account_firstname,
+      account_lastname,
+      account_email
+    );
+
+    if (updateResult) {
+      // Update session so welcome header reflects latest info immediately
+      req.session.account_firstname = updateResult.account_firstname;
+      req.session.account_lastname = updateResult.account_lastname;
+      req.session.account_email = updateResult.account_email;
+
+      // Refresh JWT so future protected views (e.g., edit page) get fresh data
+      try {
+        const payload = {
+          account_id: updateResult.account_id,
+          account_firstname: updateResult.account_firstname,
+          account_lastname: updateResult.account_lastname,
+          account_email: updateResult.account_email,
+          account_type: updateResult.account_type,
+        };
+        const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
+          expiresIn: "1h",
+        });
+        const cookieOptions = {
+          httpOnly: true,
+          maxAge: 3600 * 1000,
+          secure: process.env.NODE_ENV !== "development",
+          sameSite: "lax",
+        };
+        res.cookie("jwt", accessToken, cookieOptions);
+      } catch (e) {
+        console.error("JWT refresh after account update failed", e);
+      }
+
+      req.flash("notice", "Account information was successfully updated.");
+      res.redirect("/account");
+    } else {
+      req.flash("notice", "No changes were made.");
+      res.status(400).render("account/update", {
+        title: "Account Update",
+        nav,
+        errors: [],
+        account_firstname,
+        account_lastname,
+        account_email,
+      });
+    }
+  } catch (error) {
+    console.error("Update account error.", error);
+    req.flash("notice", "There was an error updating your account.");
+    res.status(500).render("account/update", {
+      title: "Account Update",
+      nav,
+      errors: [],
+      account_firstname,
+      account_lastname,
+      account_email,
+    });
+  }
+};
+
+/* ****************************************
+ *  Process update password
+ * ************************************ */
+accountController.updatePassword = async function (req, res) {
+  const { account_id, account_password } = req.body;
+  let nav = await utilities.getNav();
+
+  try {
+    // Hash the new password before saving
+    const hashedPassword = await bcrypt.hash(account_password, 10);
+
+    const updatedAccount = await accountModel.updatePassword(
+      account_id,
+      hashedPassword
+    );
+
+    if (updatedAccount) {
+      // No name changes here, but ensure session still has names for welcome
+      if (updatedAccount.account_firstname) {
+        req.session.account_firstname = updatedAccount.account_firstname;
+      }
+      if (updatedAccount.account_lastname) {
+        req.session.account_lastname = updatedAccount.account_lastname;
+      }
+
+      // Refresh JWT so any subsequent protected views have fresh claims
+      try {
+        const payload = {
+          account_id: updatedAccount.account_id,
+          account_firstname: updatedAccount.account_firstname || req.session.account_firstname,
+          account_lastname: updatedAccount.account_lastname || req.session.account_lastname,
+          account_email: updatedAccount.account_email || req.session.account_email,
+          account_type: updatedAccount.account_type || req.session.account_type,
+        };
+        const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
+          expiresIn: "1h",
+        });
+        const cookieOptions = {
+          httpOnly: true,
+          maxAge: 3600 * 1000,
+          secure: process.env.NODE_ENV !== "development",
+          sameSite: "lax",
+        };
+        res.cookie("jwt", accessToken, cookieOptions);
+      } catch (e) {
+        console.error("JWT refresh after password update failed", e);
+      }
+
+      req.flash("notice", "Password updated successfully.");
+      res.redirect("/account");
+    } else {
+      req.flash("notice", "Password update failed. Please try again.");
+      res.status(400).render("account/update", {
+        title: "Change Password",
+        nav,
+        errors: [],
+        account_id,
+      });
+    }
+  } catch (error) {
+    console.error("Password update error.", error);
+    req.flash("notice", "Error updating password.");
+    res.status(500).render("account/update", {
+      title: "Change Password",
+      nav,
+      errors: [],
+      account_id,
     });
   }
 };

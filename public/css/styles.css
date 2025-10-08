@@ -619,6 +619,7 @@ label {
   justify-content: center;
   cursor: pointer;
   margin: 0 auto;
+  margin-top: 1rem;
   padding: 0.5rem;
   width: 150px;
   background-color: coral;

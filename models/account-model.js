@@ -1,7 +1,6 @@
 const pool = require("../database/");
 const bcrypt = require("bcryptjs");
 
-
 /*******
  * Register a new account
  */
@@ -28,7 +27,6 @@ async function registerAccount(
       console.log("Email is already registered.");
       throw new Error("Email already registered.");
     }
-
 
     const sql = `INSERT INTO public.account 
         (
@@ -110,5 +108,62 @@ async function getAccountByEmail(account_email) {
   }
 }
 
+/* *************************
+ *  Update Account Information
+ * ************************* */
+async function updateAccount(
+  account_id,
+  account_firstname,
+  account_lastname,
+  account_email
+) {
+  try {
+    const sql = `
+      UPDATE public.account
+      SET account_firstname = $2,
+          account_lastname = $3,
+          account_email = $4
+      WHERE account_id = $1
+      RETURNING *;
+    `;
+    const result = await pool.query(sql, [
+      account_id,
+      account_firstname,
+      account_lastname,
+      account_email,
+    ]);
+    return result.rows[0];
+  } catch (error) {
+    console.error("updateAccount error", error);
+    throw error;
+  }
+}
 
-module.exports = { registerAccount, checkExistingEmail, checkAccount, getAccountByEmail };
+/* *************************
+ *  Change or Update Password Information
+ * ************************* */
+async function updatePassword(account_id, hashedPassword) {
+  try {
+    const sql = `
+    UPDATE public.account
+    SET account_password = $1
+    WHERE account_id = $2
+    RETURNING *; 
+  `;
+
+    const result = await pool.query(sql, [hashedPassword, account_id]);
+    return result.rows[0];
+  } catch (error) {
+    console.error("updatePassword error.", error);
+    throw error;
+  }
+}
+
+module.exports = {
+  registerAccount,
+  checkExistingEmail,
+  checkAccount,
+  getAccountByEmail,
+  updateAccount,
+  updatePassword,
+};

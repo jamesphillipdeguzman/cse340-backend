@@ -6,7 +6,7 @@
     <% } %>
 
 
-        <% if (errors) { %>
+        <% if (Array.isArray(errors) && errors.length> 0) { %>
             <ul class="warnings">
                 <% errors.forEach(error=> { %>
                     <li>
@@ -33,7 +33,7 @@
                                 <input type="email" class="form-control" id="account_email" name="account_email"
                                     placeholder="Enter email" required value="<%= account_email %>">
                                 <input type="hidden" id="account_id_update" name="account_id" value="<%= account_id %>">
-
+                                <button type="submit" class="btn-submit">Update</button>
                             </fieldset>
                         </div>
 
@@ -41,7 +41,7 @@
 
                     <!-- Password Change form -->
                     <form id="ChangePasswordForm" name="change-password" class="update-forms" method="POST"
-                        action="/account/update">
+                        action="/account/update-password">
                         <h2>Change Password</h2>
                         <div class="form-group">
                             <fieldset>
@@ -49,7 +49,7 @@
                                 <p>*Note: You're original password will be changed.</p>
                                 <label for="account_password">Password</label>
                                 <input type="password" class="form-control" id="account_password"
-                                    name="account_password"
+                                    name="account_password" required
                                     pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$">
                                 <input type="hidden" id="account_id_password" name="account_id"
                                     value="<%= account_id %>">
@@ -57,7 +57,7 @@
                                     letter,
                                     1 number, and 1 special character</small>
                                 <button type="button" class="btn-password">Show Password</button>
-                                <button type="submit" class="btn-password">Change Password</button>
+                                <button type="submit" class="btn-submit">Change Password</button>
                             </fieldset>
 
                         </div>

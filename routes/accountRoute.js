@@ -18,6 +18,22 @@ router.get(
   utilities.handleErrors(accountController.buildEditAccount)
 );
 
+// Process account update
+router.post(
+  "/update",
+  validate.accountUpdateRules(),
+  validate.checkUpdateData,
+  utilities.handleErrors(accountController.updateAccount)
+);
+
+// Process change password
+router.post(
+  "/update-password",
+  validate.accountPasswordRules(),
+  validate.checkPasswordData,
+  utilities.handleErrors(accountController.updatePassword)
+);
+
 // Route to build registration view
 router.get(
   "/register",
