@@ -6,3 +6,12 @@
         <h2 id="welcome">Welcome, <%= account_firstname %>
         </h2> |
         <p>You're logged in! 🎉</p>
+
+        <!-- Edit Account Information works for all account types (e.g., Employee, Admin, Client) -->
+        <a id="edit-account" href="/account/update" title="Edit account information">Edit Account Information</a>
+
+        <!-- Inventory management only works for Employee or Admin only -->
+        <% if (account_type !=="Client" ) { %>
+            <h3 id="inventory-management">Inventory Management</h3>
+            <a id="edit-account" href="/inv" title="Manage Inventory">Manage Inventory</a>
+            <% } %>

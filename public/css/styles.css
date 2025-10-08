@@ -842,6 +842,20 @@ small {
   text-decoration: underline;
 }
 
+/*****************************
+  * ACCOUNT  STYLES
+  *****************************/
+
+#edit-account {
+  color: navy;
+  text-decoration: underline;
+  margin-left: 30px;
+}
+
+#inventory-management {
+  margin-top: 50px;
+  margin-left: 30px;
+}
 
 /*********************
  * MEDIA QUERIES

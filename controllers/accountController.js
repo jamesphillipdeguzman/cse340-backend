@@ -24,6 +24,32 @@ accountController.buildLogin = async function (req, res) {
   });
 };
 
+/**
+ * Build the Edit Account view
+ */
+
+accountController.buildEditAccount = async function (req, res) {
+  try {
+    let nav = await utilities.getNav();
+
+    // Retrieve user info from verified JWT
+    const { account_email, account_firstname, account_type } = req.user;
+
+    res.render("account/update", {
+      title: "Edit Account",
+      nav,
+      errors: null,
+      account_email,
+      account_firstname,
+      account_type,
+    });
+  } catch (error) {
+    console.error("Error building edit account view", error);
+    req.flash("notice", "Unable to load account details. Please try again.");
+    res.redirect("/account/");
+  }
+};
+
 // Build the Registration view
 
 accountController.buildRegister = async function (req, res) {
@@ -172,24 +198,35 @@ accountController.accountLogin = async function (req, res) {
     // Password is already trimmed by validation middleware
     if (await bcrypt.compare(account_password, accountData.account_password)) {
       delete accountData.account_password;
-      const accessToken = jwt.sign(
-        accountData,
-        process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: 3600 * 1000 }
-      );
+
+      // Process only what I need
+      const payload = {
+        account_id: accountData.account_id,
+        account_firstname: accountData.account_firstname,
+        account_email: accountData.account_email,
+        account_type: accountData.account_type,
+      };
+
+      const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
+        expiresIn: "1h",
+      });
 
       // STORE first name in session
       req.session.account_firstname = accountData.account_firstname;
 
-      if (process.env.NODE_ENV === "development") {
-        res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 });
-      } else {
-        res.cookie("jwt", accessToken, {
-          httpOnly: true,
-          secure: true,
-          maxAge: 3600 * 1000,
-        });
-      }
+      // Store account_type
+      req.session.account_type = accountData.account_type;
+
+      // Save JWT in cookie
+      const cookieOptions = {
+        httpOnly: true,
+        maxAge: 3600 * 1000, // 1 hour
+        secure: process.env.NODE_ENV !== "development",
+        sameSite: "lax",
+      };
+
+      res.cookie("jwt", accessToken, cookieOptions);
+
       return res.redirect("/account/");
     } else {
       req.flash(
@@ -204,7 +241,17 @@ accountController.accountLogin = async function (req, res) {
       });
     }
   } catch (error) {
-    throw new Error("Access Forbidden");
+    console.error("Login error.", error);
+    req.flash(
+      "notice",
+      "Login failed due to a server error. Please try again."
+    );
+    return res.status(500).render("account/login", {
+      title: "Login",
+      nav,
+      errors: null,
+      account_email,
+    });
   }
 };
 
@@ -215,13 +262,17 @@ accountController.logout = async function (req, res) {
   try {
     // Flash before destroying session
     req.flash("notice", "You've been logged out successfully.");
+    // Clear JWT cookie
+    res.clearCookie("jwt");
     // Destroy session
     req.session.destroy((err) => {
       if (err) {
         console.error("Error destroying session", err);
+        res.redirect("/"); // redirect to home or login page
       }
-      // Clear JWT cookie
-      res.clearCookie("jwt");
+
+      // Explicitly clear cookie too
+      res.clearCookie("connect.sid", { path: "/" });
       res.redirect("/"); // redirect to home or login page
     });
   } catch (error) {
@@ -243,7 +294,8 @@ accountController.buildAccountManagement = async function (req, res) {
       nav,
       errors: null,
       messages: req.flash(),
-      // account_firstname: req.session.account_firstname, -- no need to pass account_firstname here since it is globally available now from server.js
+      account_firstname: req.session.account_firstname, //-- no need to pass account_firstname here since it is globally available now from server.js
+      account_type: req.session.account_type,
       classificationSelect,
     });
   } catch (error) {

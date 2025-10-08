@@ -20,6 +20,8 @@ const session = require("express-session");
 const pool = require("./database/");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
+const verifyJWT = require("./middleware/verifyJWT");
+const authorizeAccountType = require("./middleware/authorizeAccountType");
 
 /* ***********************
  * Middleware
@@ -37,9 +39,11 @@ app.use(
   })
 );
 
-// Make account_firstname available to all EJS templates
+// Make account_firstname and account_type available to all EJS templates
 app.use((req, res, next) => {
   res.locals.account_firstname = req.session.account_firstname || null;
+  res.locals.account_type = req.session.account_type || null;
+  console.log("Session data:", req.session);
   next();
 });
 
@@ -81,9 +85,19 @@ app.use(express.static(path.join(__dirname, "public")));
 // });
 app.get("/", utilities.handleErrors(baseController.buildHome));
 
-app.use("/inv", inventoryRoute);
+app.use(
+  "/inv",
+  verifyJWT,
+  authorizeAccountType("Admin", "Employee"),
+  inventoryRoute
+);
 
-app.use("/inventory", inventoryRoute);
+app.use(
+  "/inventory",
+  verifyJWT,
+  authorizeAccountType("Admin", "Employee"),
+  inventoryRoute
+);
 
 app.use("/account", accountRoute);
 
