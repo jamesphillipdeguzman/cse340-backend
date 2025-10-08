@@ -39,9 +39,11 @@ app.use(
   })
 );
 
-// Make account_firstname and account_type available to all EJS templates
+// Make account_firstname, lastname, email, and account_type available to all EJS templates
 app.use((req, res, next) => {
   res.locals.account_firstname = req.session.account_firstname || null;
+  res.locals.account_lastname = req.session.account_lastname || null;
+  res.locals.account_email = req.session.account_email || null;
   res.locals.account_type = req.session.account_type || null;
   console.log("Session data:", req.session);
   next();

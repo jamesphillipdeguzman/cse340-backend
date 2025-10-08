@@ -1,1 +1,68 @@
-<h2>Edit Account</h2>
+<% if (title) { %>
+    <h1>
+        <%= title %>
+    </h1>
+
+    <% } %>
+
+
+        <% if (errors) { %>
+            <ul class="warnings">
+                <% errors.forEach(error=> { %>
+                    <li>
+                        <%= error.msg %>
+                    </li>
+                    <% }) %>
+            </ul>
+            <% } %>
+
+                <div id="form-wrapper2">
+                    <!-- Update Account form -->
+                    <form id="updateAccountForm" name="account-update" class="update-forms" method="POST"
+                        action="/account/update">
+                        <h2>Account Update</h2>
+                        <div class="form-group">
+                            <fieldset>
+                                <label for="account_firstname">First Name</label>
+                                <input type="text" class="form-control" id="account_firstname" name="account_firstname"
+                                    placeholder="Enter First Name" required value="<%= account_firstname %>">
+                                <label for="account_lastname">Last Name</label>
+                                <input type="text" class="form-control" id="account_lastname" name="account_lastname"
+                                    placeholder="Enter Last Name" required value="<%= account_lastname %>">
+                                <label for="account_email">Email</label>
+                                <input type="email" class="form-control" id="account_email" name="account_email"
+                                    placeholder="Enter email" required value="<%= account_email %>">
+                                <input type="hidden" id="account_id_update" name="account_id" value="<%= account_id %>">
+
+                            </fieldset>
+                        </div>
+
+                    </form>
+
+                    <!-- Password Change form -->
+                    <form id="ChangePasswordForm" name="change-password" class="update-forms" method="POST"
+                        action="/account/update">
+                        <h2>Change Password</h2>
+                        <div class="form-group">
+                            <fieldset>
+
+                                <p>*Note: You're original password will be changed.</p>
+                                <label for="account_password">Password</label>
+                                <input type="password" class="form-control" id="account_password"
+                                    name="account_password"
+                                    pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$">
+                                <input type="hidden" id="account_id_password" name="account_id"
+                                    value="<%= account_id %>">
+                                <small>Password must be at least 12 characters and contain at least 1 uppercase
+                                    letter,
+                                    1 number, and 1 special character</small>
+                                <button type="button" class="btn-password">Show Password</button>
+                                <button type="submit" class="btn-password">Change Password</button>
+                            </fieldset>
+
+                        </div>
+                    </form>
+
+                </div>
+
+                <script src="/js/script.js"></script>

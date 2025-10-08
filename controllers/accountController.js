@@ -33,7 +33,13 @@ accountController.buildEditAccount = async function (req, res) {
     let nav = await utilities.getNav();
 
     // Retrieve user info from verified JWT
-    const { account_email, account_firstname, account_type } = req.user;
+    const {
+      account_email,
+      account_firstname,
+      account_lastname,
+      account_type,
+      account_id,
+    } = req.user;
 
     res.render("account/update", {
       title: "Edit Account",
@@ -41,7 +47,9 @@ accountController.buildEditAccount = async function (req, res) {
       errors: null,
       account_email,
       account_firstname,
+      account_lastname,
       account_type,
+      account_id,
     });
   } catch (error) {
     console.error("Error building edit account view", error);
@@ -203,6 +211,7 @@ accountController.accountLogin = async function (req, res) {
       const payload = {
         account_id: accountData.account_id,
         account_firstname: accountData.account_firstname,
+        account_lastname: accountData.account_lastname,
         account_email: accountData.account_email,
         account_type: accountData.account_type,
       };
@@ -214,8 +223,14 @@ accountController.accountLogin = async function (req, res) {
       // STORE first name in session
       req.session.account_firstname = accountData.account_firstname;
 
+      // Store last name in session
+      req.session.account_lastname = accountData.account_lastname;
+
       // Store account_type
       req.session.account_type = accountData.account_type;
+
+      // Stor email
+      req.session.account_email = accountData.account_email;
 
       // Save JWT in cookie
       const cookieOptions = {
@@ -295,7 +310,9 @@ accountController.buildAccountManagement = async function (req, res) {
       errors: null,
       messages: req.flash(),
       account_firstname: req.session.account_firstname, //-- no need to pass account_firstname here since it is globally available now from server.js
+      account_lastname: req.session.account_lastname,
       account_type: req.session.account_type,
+      account_email: req.session.account_email,
       classificationSelect,
     });
   } catch (error) {
