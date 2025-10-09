@@ -1131,4 +1131,14 @@ small {
     width: 50%;
     max-width: 50vw;
   }
+
+  input {
+    width: 80px;
+    
+  }
+
+  input.classification-input {
+    font-size: 0.8rem;
+  }
+
 }
