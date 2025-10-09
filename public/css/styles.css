@@ -720,6 +720,41 @@ textarea {
   transition: border-color 0.3s, background-color 0.3s;
 }
 
+.classificationDiv, .inventoryDisplayDiv {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.classificationDiv table, .inventoryDisplayDiv table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.classificationDiv th,
+.classificationDiv td,
+.inventoryDisplayDiv th,
+.inventoryDisplayDiv td {
+  text-align: left;
+  padding: 10px;
+  border: 1px solid #ccc;
+  word-wrap: break-word;
+}
+
+
+/* #classificationDisplay, #inventoryDisplay {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  max-width: 80vw;
+} */
+
+input.classification-input {
+  display: flex;
+    
+}
+
 input:invalid,
 textarea:invalid {
   background-color: #ffdddd;
@@ -957,6 +992,8 @@ small {
     font-size: 0.9rem;
 
   }
+
+  
 }
 
 @media (max-width: 680px) {
@@ -1132,13 +1169,10 @@ small {
     max-width: 50vw;
   }
 
-  input {
-    width: 80px;
-    
-  }
 
   input.classification-input {
     font-size: 0.8rem;
+    width: 80px;
   }
 
 }
