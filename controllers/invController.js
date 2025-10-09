@@ -70,7 +70,6 @@ invCont.buildManagement = async function (req, res, next) {
 };
 //TODO: Create a buildRemoveClassification here...
 
-
 /**
  * Build the add classification view
  */
@@ -260,6 +259,115 @@ invCont.getInventoryJSON = async (req, res, next) => {
   }
 };
 
+/* ***************************
+ *  Return All Classifications As JSON
+ * ************************** */
+invCont.getAllClassificationsJSON = async (req, res, next) => {
+  try {
+    const classifications = await invModel.getAllClassifications();
+    if (classifications && classifications.length > 0) {
+      return res.json(classifications);
+    } else {
+      return res.status(404).json({ error: "No classifications found. " });
+    }
+  } catch (error) {
+    console.error("Error fetching classifications.", error);
+    return next(error);
+  }
+};
+
+/**
+ * Update all classification
+ */
+
+invCont.updateClassification = async function (req, res, next) {
+  try {
+    const classificationId = parseInt(req.params.classification_id);
+    const { classification_name } = req.body;
+
+    if (!classification_name || isNaN(classificationId)) {
+      req.flash("notice", "Invalid classification data.");
+      return res.redirect("/inv");
+    }
+
+    const result = await invModel.updateClassification(
+      classificationId,
+      classification_name
+    );
+    if (result) {
+      req.flash(
+        "notice",
+        `Classification updated: ${result.classification_name}`
+      );
+    } else {
+      req.flash("notice", "Classification not found or update failed.");
+    }
+    return res.redirect("/inv");
+  } catch (error) {
+    console.error("Error updating classification.", error);
+    req.flash(
+      "notice",
+      "Sorry, something went wrong updating the classification."
+    );
+    return res.redirect("/inv");
+  }
+};
+
+/**
+ * Delete a classification
+ */
+
+invCont.deleteClassification = async function (req, res, next) {
+  try {
+    const classification_id = parseInt(req.params.classification_id, 10);
+
+    if (!classification_id) {
+      req.flash("notice", "Classification ID not provided.");
+      return res.redirect("/inv");
+    }
+
+    const classData = await invModel.getClassificationById(classification_id);
+
+    if (!classData) {
+      req.flash("notice", "Classification not found.");
+      return res.redirect("/inv");
+    }
+
+    // Check if there are still inventory items under this classification
+    const inventoryItems = await invModel.getInventoryByClassificationId(
+      classification_id
+    );
+    if (inventoryItems && inventoryItems.length > 0) {
+      req.flash(
+        "notice",
+        `Cannot delete "${classData.classification_name}" because it still has
+        ${inventoryItems.length} vehicle(s).`
+      );
+      return res.redirect("/inv");
+    }
+
+    const deleteResult = await invModel.deleteClassification(classification_id);
+
+    if (deleteResult) {
+      req.flash(
+        "notice",
+        `The ${classData.classification_name} was successfully deleted.`
+      );
+    } else {
+      req.flash("notice", `Deleting classification failed.`);
+    }
+
+    return res.redirect("/inv");
+  } catch (error) {
+    console.error("Error deleting classification: ", error);
+    req.flash(
+      "notice",
+      "An error occurred while deleting the classification item."
+    );
+    return res.redirect("/inv");
+  }
+};
+
 /**
  * Edit Inventory View
  */
@@ -325,30 +433,28 @@ invCont.editInventoryView = async function (req, res, next) {
   }
 };
 
-
 /**
  * Update Inventory Data
  */
 
 invCont.updateInventory = async function (req, res, next) {
-  
-    console.log("REQ BODY:", req.body);
-    
-    const {
-      inv_id,
-      inv_make,
-      inv_model,
-      inv_year,
-      inv_description,
-      inv_image,
-      inv_thumbnail,
-      inv_price,
-      inv_miles,
-      inv_color,
-      classification_id,
-    } = req.body;
-    const itemName = `${inv_year} ${inv_make} ${inv_model}`.trim();
-    try {
+  console.log("REQ BODY:", req.body);
+
+  const {
+    inv_id,
+    inv_make,
+    inv_model,
+    inv_year,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_miles,
+    inv_color,
+    classification_id,
+  } = req.body;
+  const itemName = `${inv_year} ${inv_make} ${inv_model}`.trim();
+  try {
     let nav = await utilities.getNav();
     const itemData = await invModel.getInventoryById(inv_id);
     if (!itemData || itemData.length === 0) {
@@ -375,16 +481,15 @@ invCont.updateInventory = async function (req, res, next) {
     res.locals.inv_miles = item.inv_miles;
     res.locals.inv_color = item.inv_color;
     res.locals.classification_id = item.classification_id;
-      
+
     const formHTML = await utilities.buildEditInventory(req, res);
-    
 
     // Validate required fields
-    if(
+    if (
       !inv_make ||
       !inv_model ||
       !inv_year ||
-      !inv_description||
+      !inv_description ||
       !inv_image ||
       !inv_thumbnail ||
       !inv_price ||
@@ -428,20 +533,14 @@ invCont.updateInventory = async function (req, res, next) {
       classification_id
     );
 
-    
-    console.log("Update result:", updateResult)
+    console.log("Update result:", updateResult);
 
     // Handle success/failure
     if (updateResult) {
-      req.session.flash = {};
-      req.flash(
-        "notice",
-        `The ${itemName} was successfully updated.`
-      );
+      // req.session.flash = {};
+      req.flash("notice", `The ${itemName} was successfully updated.`);
       return res.redirect("/inv");
     } else {
-      
-
       req.flash("notice", "Sorry, updating the inventory failed.");
       return res.status(501).render("inventory/editInventory", {
         title: "Edit " + itemName,
@@ -465,10 +564,12 @@ invCont.updateInventory = async function (req, res, next) {
   } catch (error) {
     console.error("Error updating inventory: ", error);
     let nav = await utilities.getNav();
-    const classificationSelect = await utilities.buildClassificationList(classification_id || "");
+    const classificationSelect = await utilities.buildClassificationList(
+      classification_id || ""
+    );
 
     const formHTML = await utilities.buildEditInventory(req, res);
-    
+
     req.flash("notice", "Sorry, updating the inventory failed.");
     return res.status(500).render("inventory/editInventory", {
       title: "Edit " + itemName,
@@ -508,7 +609,8 @@ invCont.deleteConfirmationView = async function (req, res, next) {
     }
 
     const item = itemData[0];
-    const itemName = `${item.inv_year} ${item.inv_make} ${item.inv_model}`.trim();
+    const itemName =
+      `${item.inv_year} ${item.inv_make} ${item.inv_model}`.trim();
     let nav = await utilities.getNav();
 
     // Set res.locals with inventory details for formHTML
@@ -518,11 +620,10 @@ invCont.deleteConfirmationView = async function (req, res, next) {
     res.locals.inv_year = item.inv_year;
     res.locals.inv_price = item.inv_price;
 
-   
     // Build formHTML for delete confirmation
     const formHTML = await utilities.buildDeleteConfirmation(req, res);
 
-  res.render("inventory/deleteConfirm", {
+    res.render("inventory/deleteConfirm", {
       title: "Delete " + itemName,
       nav,
       errors: null,
@@ -558,7 +659,8 @@ invCont.deleteInventory = async function (req, res, next) {
     }
 
     const item = itemData[0];
-    const itemName = `${item.inv_year} ${item.inv_make} ${item.inv_model}`.trim();
+    const itemName =
+      `${item.inv_year} ${item.inv_make} ${item.inv_model}`.trim();
 
     const deleteResult = await invModel.deleteInventoryItem(inv_id);
 
@@ -575,8 +677,6 @@ invCont.deleteInventory = async function (req, res, next) {
     return res.redirect("/inv");
   }
 };
-
-
 
 /**
  * Deliberately cause a 500 server error for testing purposes.

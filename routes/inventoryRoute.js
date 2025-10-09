@@ -62,21 +62,27 @@ router.get(
   utilities.handleErrors(invController.editInventoryView)
 );
 
-// Handle update 
-router.post("/update/", 
+// Handle update
+router.post(
+  "/update/",
   validate.newInventoryRules(),
   validate.checkUpdateData,
   utilities.handleErrors(invController.updateInventory)
 );
 
 // Route to build delete confirmation view
-router.get("/delete/:inv_id", 
+router.get(
+  "/delete/:inv_id",
   utilities.handleErrors(invController.deleteConfirmationView)
 );
 
 // Handle delete
-router.post("/delete",
-  utilities.handleErrors(invController.deleteInventory)
+router.post("/delete", utilities.handleErrors(invController.deleteInventory));
+
+// Route for returning all classifications
+router.get(
+  "/classification/all",
+  utilities.handleErrors(invController.getAllClassificationsJSON)
 );
 
 /**

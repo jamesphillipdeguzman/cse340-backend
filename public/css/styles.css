@@ -789,7 +789,7 @@ small {
   cursor: pointer;
 }
 
-#manage-inventory {
+#manage-inventory, #manage-classification {
   margin-left: 30px;
 }
 
@@ -816,7 +816,7 @@ small {
   height: 40px;
 }
 
-#inventoryDisplay {
+#inventoryDisplay, #classificationDisplay {
   margin-left: 30px;
   width: 50%;
   /* Full width */
@@ -827,37 +827,37 @@ small {
   font-family: Arial, sans-serif;
 }
 
-#inventoryDisplay thead {
+#inventoryDisplay thead, #classificationDisplay thead {
   background-color: #004080;
   /* Dark blue header */
   color: #ffffff;
   /* White text */
 }
 
-#inventoryDisplay th,
-#inventoryDisplay td {
+#inventoryDisplay th, #classificationDisplay th,
+#inventoryDisplay td, #classificationDisplay td {
   padding: 10px;
   text-align: left;
   border: 1px solid #cccccc;
 }
 
-#inventoryDisplay tbody tr:nth-child(even) {
+#inventoryDisplay tbody tr:nth-child(even), #classificationDisplay tbody tr:nth-child(even) {
   background-color: #f2f2f2;
   /* Zebra stripes */
 }
 
-#inventoryDisplay tbody tr:hover {
+#inventoryDisplay tbody tr:hover,  #classificationDisplay tbody tr:hover {
   background-color: #e0f0ff;
   /* Highlight row on hover */
 }
 
-#inventoryDisplay a {
+#inventoryDisplay a, #classificationDisplay a{
   color: #004080;
   text-decoration: none;
   font-weight: bold;
 }
 
-#inventoryDisplay a:hover {
+#inventoryDisplay a:hover, #classificationDisplay a:hover {
   text-decoration: underline;
 }
 

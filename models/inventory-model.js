@@ -9,6 +9,74 @@ async function getClassifications() {
   );
 }
 
+async function getAllClassifications() {
+  try {
+    const sql = `
+      SELECT classification_id, classification_name
+      FROM public.classification
+      ORDER BY classification_name
+    `;
+    const result = await pool.query(sql);
+    return result.rows;
+  } catch (error) {
+    console.error("getAllClassifications error", error);
+    throw error;
+  }
+}
+
+/* ***************************
+ *  Update Classification Data
+ * ************************** */
+async function updateClassification(classification_id, classification_name) {
+  try {
+    const sql = `
+      UPDATE public.classification
+      SET classification_name = $2
+      WHERE classification_id = $1
+      RETURNING *
+    `;
+    const result = await pool.query(sql, [
+      classification_id,
+      classification_name,
+    ]);
+    return result.rows[0];
+  } catch (error) {
+    console.error("updateClassification error " + error);
+    throw error;
+  }
+}
+
+/* ***************************
+ *  Delete Classification Data
+ * ************************** */
+async function deleteClassification(classification_id) {
+  try {
+    const sql =
+      "DELETE FROM public.classification WHERE classification_id = $1";
+    const result = await pool.query(sql, [classification_id]);
+
+    // Returns true if a row was deleted, otherwise false
+    return result.rowCount > 0;
+  } catch (error) {
+    console.error("Delete classification error.", error);
+    throw error;
+  }
+}
+
+async function getClassificationById(classification_id) {
+  try {
+    const sql = `
+      SELECT * FROM 
+      public.classification
+      WHERE classification_id = $1
+    `;
+    const data = await pool.query(sql, [classification_id]);
+    return data.rows[0];
+  } catch (error) {
+    console.error("getClassificationById error", error);
+    throw error;
+  }
+}
 /**
  * Get all inventory items and classification name by classification id
  */
@@ -144,8 +212,7 @@ async function updateInventory(
   classification_id
 ) {
   try {
-    const sql =
-      `
+    const sql = `
       UPDATE public.inventory
       SET 
         inv_make = $1,
@@ -160,7 +227,7 @@ async function updateInventory(
         classification_id = $10
       WHERE inv_id = $11
       RETURNING *
-    `
+    `;
     const data = await pool.query(sql, [
       inv_make,
       inv_model,
@@ -172,27 +239,26 @@ async function updateInventory(
       inv_miles,
       inv_color,
       classification_id,
-      inv_id
-    ])
-    return data.rows[0]
+      inv_id,
+    ]);
+    return data.rows[0];
   } catch (error) {
-    console.error("model error: " + error)
+    console.error("model error: " + error);
   }
 }
-
 
 /* ***************************
  *  Delete Inventory Item
  * ************************** */
- async function deleteInventoryItem(inv_id) {
+async function deleteInventoryItem(inv_id) {
   try {
-    const sql = 'DELETE FROM inventory WHERE inv_id = $1'
-    const result = await pool.query(sql, [inv_id])
+    const sql = "DELETE FROM inventory WHERE inv_id = $1";
+    const result = await pool.query(sql, [inv_id]);
 
-  // Returns true if a row was deleted, otherwise false
-  return result.rowCount > 0;
+    // Returns true if a row was deleted, otherwise false
+    return result.rowCount > 0;
   } catch (error) {
-    console.error("Delete inventory error.", error)
+    console.error("Delete inventory error.", error);
     throw error;
   }
 }
@@ -205,4 +271,8 @@ module.exports = {
   addInventory,
   updateInventory,
   deleteInventoryItem,
+  getAllClassifications,
+  updateClassification,
+  deleteClassification,
+  getClassificationById,
 };

@@ -1,7 +1,22 @@
 "use strict";
 
 document.addEventListener("DOMContentLoaded", function () {
-  debugger;
+  // Fetch all classifications
+
+  fetch("/inv/classification/all")
+    .then((response) => {
+      if (response.ok) return response.json();
+
+      throw new Error("Network response was not OK.");
+    })
+    .then((data) => {
+      console.log("All classifications", data);
+      buildClassificationList(data);
+    })
+    .catch((error) => {
+      console.error("Error fetching classifications.", error);
+    });
+
   // Get a list of items in inventory based on the classification_id
 
   let classificationList = document.querySelector("#classificationList");
@@ -27,8 +42,93 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   });
 
-  // TODO: Create a classificationDisplay here...
-  
+  // Build classification items into HTML table components and inject into DOM
+  function buildClassificationList(data) {
+    let classificationDisplay = document.getElementById(
+      "classificationDisplay"
+    );
+    // Set up the table labels
+    let dataTable = `
+      <thead>
+        <tr>
+          <th>Classification Name</th>
+          <th>Modify</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+    `;
+
+    data.forEach(function (element) {
+      dataTable += `
+        <tr data-id="${element.classification_id}">
+          <td>
+            <input type="text" value="${element.classification_name}" class="classification-input" />
+          </td>
+          <td>
+            <button class="modify-btn">Modify</button>
+          </td>
+          <td>
+            <button class="delete-btn">Delete</button>
+          </td>
+        </tr>
+      `;
+    });
+
+    dataTable += "</tbody>";
+    classificationDisplay.innerHTML = dataTable;
+
+    // Add event listeners for Modify buttons
+    classificationDisplay.querySelectorAll(".modify-btn").forEach((button) => {
+      button.addEventListener("click", function () {
+        const row = this.closest("tr");
+        const id = row.dataset.id;
+        const newName = row.querySelector(".classification-input").value;
+
+        fetch(`/classification/edit/${id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ classification_name: newName }),
+        })
+          .then((res) => {
+            if (res.redirected) {
+              window.location.href = res.url;
+              return;
+            }
+            return res.json();
+          })
+          .then((data) => {
+            alert(`Classification updated: ${data.classification_name}`);
+            window.location.reload();
+          })
+          .catch((err) => console.error(err));
+      });
+    });
+
+    // Add event listeners for Delete buttons
+    classificationDisplay.querySelectorAll(".delete-btn").forEach((button) => {
+      button.addEventListener("click", function () {
+        const row = this.closest("tr");
+        const id = row.dataset.id;
+
+        fetch(`/classification/delete/${id}`, {
+          method: "DELETE",
+        })
+          .then((res) => {
+            if (res.redirected) {
+              window.location.href = res.url;
+              return;
+            }
+            return res.json();
+          })
+          .then(() => {
+            row.remove(); // Remove row from table
+            window.location.reload();
+          })
+          .catch((err) => console.error(err));
+      });
+    });
+  }
 
   // Build inventory items into HTML table components and inject into DOM
   function buildInventoryList(data) {

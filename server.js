@@ -14,6 +14,7 @@ const path = require("path");
 const baseController = require("./controllers/baseController.js");
 const accountController = require("./controllers/accountController.js");
 const inventoryRoute = require("./routes/inventoryRoute.js");
+const classificationRoute = require("./routes/classificationRoute.js");
 const accountRoute = require("./routes/accountRoute.js");
 const utilities = require("./utilities/");
 const session = require("express-session");
@@ -99,6 +100,13 @@ app.use(
   verifyJWT,
   authorizeAccountType("Admin", "Employee"),
   inventoryRoute
+);
+
+app.use(
+  "/classification",
+  verifyJWT,
+  authorizeAccountType("Admin", "Employee"),
+  classificationRoute
 );
 
 app.use("/account", accountRoute);
