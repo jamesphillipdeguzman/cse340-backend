@@ -40,4 +40,7 @@ async function query(text, params) {
 // Export
 // ---------------------------
 // Export both query (for normal queries) and pool (for session store)
-module.exports = pool;
+module.exports = {
+  pool,
+  query,
+};
