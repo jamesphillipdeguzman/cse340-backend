@@ -50,6 +50,7 @@ When you installed Git and cloned the remote repository in week 1, you should ha
 2. Add "/filename.html" to the end of the URL (replacing filename with the name of the file you moved to the public folder).
 3. You should see that page in the browser.
 
-## Render URL
+## 🔗 Deployment Links
 
-https://cse340-backend-ogrs.onrender.com/
+- ❌ Render (Deleted): https://cse340-backend-ogrs.onrender.com/
+- ✅ Vercel (Working): [CSE Motors](https://cse340-backend.vercel.app/)
