@@ -1,37 +1,43 @@
-const { Pool } = require("pg")
-require("dotenv").config()
-/* ***************
- * Connection Pool
- * SSL Object needed for local testing of app
- * But will cause problems in production environment
- * If - else will make determination which to use
- * *************** */
-let pool
-if (process.env.NODE_ENV == "development") {
-  pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: {
-      rejectUnauthorized: false,
-    },
-})
+/**
+ * database/index.js
+ * Refactored to work with Aiven PostgreSQL
+ * Changes:
+ *  - Always enable SSL (required by Aiven)
+ *  - Unified export of query and pool
+ *  - Added optional logging in development
+ */
 
-// Added for troubleshooting queries
-// during development
-module.exports = {
-  async query(text, params) {
-    try {
-      const res = await pool.query(text, params)
-      console.log("executed query", { text })
-      return res
-    } catch (error) {
-      console.error("error in query", { text })
-      throw error
+const { Pool } = require("pg");
+require("dotenv").config();
+
+// ---------------------------
+// Connection Pool Setup
+// ---------------------------
+// Always use SSL for Aiven, even in production
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }, // CHANGED: Required for Aiven SSL connections
+});
+
+// ---------------------------
+// Query wrapper
+// ---------------------------
+// Adds optional logging in development for easier debugging
+async function query(text, params) {
+  try {
+    if (process.env.NODE_ENV === "development") {
+      console.log("Executing query:", { text, params });
     }
-  },
+    const res = await pool.query(text, params);
+    return res;
+  } catch (err) {
+    console.error("Error in query:", { text, params, err });
+    throw err;
+  }
 }
-} else {
-  pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-  })
-  module.exports = pool
-}
+
+// ---------------------------
+// Export
+// ---------------------------
+// Export both query (for normal queries) and pool (for session store)
+module.exports = pool;

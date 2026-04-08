@@ -2,6 +2,7 @@
  * This server.js file is the primary file of the
  * application. It is used to control the project.
  *******************************************/
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"; // CHANGED: Disable TLS certificate validation for development
 /* ***********************
  * Require Statements
  *************************/
@@ -18,7 +19,7 @@ const classificationRoute = require("./routes/classificationRoute.js");
 const accountRoute = require("./routes/accountRoute.js");
 const utilities = require("./utilities/");
 const session = require("express-session");
-const pool = require("./database/");
+const { pool } = require("./database");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const verifyJWT = require("./middleware/verifyJWT");
@@ -37,7 +38,7 @@ app.use(
     resave: true,
     saveUninitialized: true,
     name: "sessionId",
-  })
+  }),
 );
 
 // Make account_firstname, lastname, email, and account_type available to all EJS templates
@@ -92,21 +93,21 @@ app.use(
   "/inv",
   verifyJWT,
   authorizeAccountType("Admin", "Employee"),
-  inventoryRoute
+  inventoryRoute,
 );
 
 app.use(
   "/inventory",
   verifyJWT,
   authorizeAccountType("Admin", "Employee"),
-  inventoryRoute
+  inventoryRoute,
 );
 
 app.use(
   "/classification",
   verifyJWT,
   authorizeAccountType("Admin", "Employee"),
-  classificationRoute
+  classificationRoute,
 );
 
 app.use("/account", accountRoute);
